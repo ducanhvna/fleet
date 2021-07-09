@@ -31,6 +31,7 @@
                             <field name="delivery_id"/>
                             <field name="location_id"/>
                             <field name="location_dest_id"/>
+                            <field name="stock_date"/>
                             <field name="odometer_start"/>
                             <field name="odometer_dest"/>
                             <field name="odometer_end"/>
@@ -52,6 +53,39 @@
                     <field name="message_ids"/>
                 </div>
             </form>
+        </field>
+    </record>
+
+    <record id="fleet_trip_search_view" model="ir.ui.view">
+        <field name="name">fleet.trip.view.search</field>
+        <field name="model">fleet.trip</field>
+        <field name="arch" type="xml">
+            <search string="Tìm kiếm">
+                <field name="delivery_id"/>
+                <field name="car_id"/>
+                <field name="location_id"/>
+                <field name="location_dest_id"/>
+                <separator/>
+                <filter name="today" string="Hôm nay" separator="1"
+                        domain="[('stock_date','&lt;=', (datetime.date.today()).strftime('%Y-%m-%d')),
+                        ('stock_date','&gt;=',(datetime.date.today()).strftime('%Y-%m-%d'))]"/>
+                <filter string="Tuần này" name="week"
+                        domain="[('stock_date','&lt;=', (context_today() + relativedelta(weeks=0,day=7, weekday=-1)).strftime('%Y-%m-%d')),
+                        ('stock_date','&gt;=',(context_today() - relativedelta(weeks=1, weekday=0)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Tuần trước" name="last_week"
+                        domain="[('stock_date', '&gt;=', ((context_today()+relativedelta(weeks=-2, days=1, weekday=0)).strftime('%Y-%m-%d'))),
+                        ('stock_date', '&lt;=', ((context_today()+relativedelta(weeks=-1,weekday=6)).strftime('%Y-%m-%d')))]"/>
+                <filter name="month" string="Tháng này"
+                        domain="['&amp;',('stock_date','&gt;=',(context_today()+relativedelta(day=1)).strftime('%Y-%m-%d')),
+                        ('stock_date','&lt;=',(context_today()+relativedelta(months=1,day=1,days=-1)).strftime('%Y-%m-%d'))]"/>
+                <filter name="prev_month" string="Tháng trước"
+                        domain="[('stock_date','&gt;=',(context_today()-relativedelta(months=1)).strftime('%Y-%m-01')),
+                        ('stock_date','&lt;',context_today().strftime('%Y-%m-01'))]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Ngày thực hiện" name="group_stock_date" context="{'group_by': 'stock_date:day'}"/>
+                </group>
+            </search>
         </field>
     </record>
 

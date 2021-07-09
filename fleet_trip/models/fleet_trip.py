@@ -27,7 +27,7 @@ class FleetTrip(models.Model):
     delivery_id = fields.Many2one('stock.delivery', string='Phiếu xuất kho')
     code = fields.Char(related='delivery_id.code', store=True)
     project_id = fields.Many2one(related='delivery_id.project_id')
-    stock_date = fields.Date(related='delivery_id.stock_date', store=True)
+    stock_date = fields.Date(string='Ngày thực hiện', required=True)
 
 
 class StockDelvery(models.Model):
