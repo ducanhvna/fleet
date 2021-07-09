@@ -1,0 +1,20 @@
+{
+    'name': 'Fleet Trip',
+    'summary': 'Fleet Trip',
+    'description': 'Fleet Trip',
+    'category': 'fleet',
+    'version': '14.0.1.0.0',
+    'depends': ['product', 'contacts'],
+    'data': [
+        'security/ir.model.access.csv',
+        'views/menu.xml',
+        'views/fleet_info_view.xml',
+        'views/fleet_trip_view.xml',
+        'views/fleet_car_view.xml',
+        'views/product_view.xml',
+        'views/stock_delivery_view.xml',
+        'wizard/fleet_trip.xml',
+    ],
+    'application': True,
+    'installable': True,
+}

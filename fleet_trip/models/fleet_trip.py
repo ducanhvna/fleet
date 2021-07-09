@@ -1,0 +1,65 @@
+# -*- coding: utf-8 -*-
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError, ValidationError
+
+
+class FleetTrip(models.Model):
+    _name = 'fleet.trip'
+    _rec_name = 'code'
+    _description = 'Hành trình vận tải'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+
+    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
+    currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
+    car_id = fields.Many2one('fleet.car', string='Xe', required=True)
+    location_id = fields.Many2one('fleet.location', 'Điểm xuất phát', required=True)
+    location_dest_id = fields.Many2one('fleet.location', 'Điểm đích', required=True)
+    eating_fee = fields.Monetary('Tiền ăn', required=True)
+    law_money = fields.Monetary('Tiền luật', required=True)
+    road_tiket_fee = fields.Monetary('Vé cầu đường', required=True)
+    incurred_fee = fields.Monetary('Phát sinh')
+    note = fields.Text('Ghi chú sửa chữa')
+    fee_total = fields.Monetary('Tổng cộng')
+    odometer_start = fields.Integer('Số CTM xuất phát', required=True)
+    odometer_dest = fields.Integer('Số CTM điểm đích', required=True)
+    odometer_end = fields.Integer('Số CTM quay về', required=True)
+
+    delivery_id = fields.Many2one('stock.delivery', string='Phiếu xuất kho')
+    code = fields.Char(related='delivery_id.code', store=True)
+    project_id = fields.Many2one(related='delivery_id.project_id')
+    stock_date = fields.Date(related='delivery_id.stock_date', store=True)
+
+
+class StockDelvery(models.Model):
+    _name = 'stock.delivery'
+    _rec_name = 'code'
+    _description = 'Phiếu xuất kho'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+
+    code = fields.Char(string='Số phiếu', required=True)
+    project_id = fields.Many2one('fleet.project', string='Dự án', required=True)
+    category_id = fields.Many2one('fleet.category', string='Hạng mục')
+    stock_date = fields.Date(string="Ngày", default=fields.Date.today)
+    location_dest_id = fields.Many2one('fleet.location', 'Điểm đích', required=True)
+    partner_receive_id = fields.Many2one('res.partner', string='Người nhận', required=True)
+    partner_receive_phone = fields.Char(related='partner_receive_id.phone', string='Điện thoại')
+    shipping_id = fields.Many2one('res.partner', string='Đơn vị vận chuyển', required=True)
+    driver_id = fields.Many2one('res.partner', string='Lái xe', required=True)
+    driver_phone = fields.Char(related='driver_id.phone', string='Điện thoại')
+    car_id = fields.Many2one('fleet.car', string='Xe', required=True)
+    delivery_line = fields.One2many('stock.delivery.line', 'delivery_id', string='Chi tiết xuất kho')
+
+
+class StockDelveryLine(models.Model):
+    _name = 'stock.delivery.line'
+    _description = 'Chi tiết xuất kho'
+
+    delivery_id = fields.Many2one('stock.delivery', string='Phiếu xuất kho')
+    product_id = fields.Many2one('product.template', string='Sản phẩm', required=True)
+    section = fields.Char(related='product_id.section', string='Tiết diện')
+    product_length = fields.Integer(related='product_id.product_length', string='Dài')
+    uom_id = fields.Many2one(related='product_id.uom_id', string='Đơn vị')
+    out_qty = fields.Float(string='SL Xuất')
+    bao_qty = fields.Float(string='Bao')
+    note = fields.Text(string='Ghi chú')
+

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+        <menuitem id="fleet_root_menu"
+                  name="Quản lí đội xe"
+                  sequence="10"/>
+
+        <menuitem id="fleet_trip_report"
+                  name="Báo cáo"
+                  parent="fleet_root_menu"
+                  sequence="40"/>
+
+        <menuitem id="fleet_config_menu"
+                  name="Cài đặt"
+                  parent="fleet_root_menu"
+                  sequence="50"/>
+</odoo>
