@@ -2,7 +2,8 @@
 <odoo>
         <menuitem id="fleet_root_menu"
                   name="Quản lí đội xe"
-                  sequence="10"/>
+                  sequence="10"
+                  web_icon="fleet_trip,static/description/icon.png"/>
 
         <menuitem id="fleet_trip_report"
                   name="Báo cáo"
