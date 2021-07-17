@@ -6,8 +6,8 @@
     'version': '14.0.1.0.0',
     'depends': ['product', 'contacts', 'hr', 'maintenance', 'web_backend', 'rest_api'],
     'data': [
-        'security/ir.model.access.csv',
         'security/fleet_security.xml',
+        'security/ir.model.access.csv',
         'views/menu.xml',
         'views/fleet_info_view.xml',
         'views/fleet_trip_view.xml',
