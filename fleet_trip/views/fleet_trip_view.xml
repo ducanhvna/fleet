@@ -12,7 +12,7 @@
                 <field name="law_money"/>
                 <field name="road_tiket_fee"/>
                 <field name="incurred_fee"/>
-                <field name="fee_total"/>
+                <field name="fee_total" sum="Tổng"/>
                 <field name="odometer_start"/>
                 <field name="odometer_dest"/>
                 <field name="odometer_end"/>
