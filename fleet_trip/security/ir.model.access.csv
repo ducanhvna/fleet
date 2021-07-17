@@ -5,9 +5,8 @@ access_fleet_project_group_user_all,fleet_project_group_user_all,model_fleet_pro
 access_fleet_project_group_system,fleet_project_group_system,model_fleet_project,base.group_system,1,1,1,1
 access_fleet_category_group_user_all,fleet_category_group_user_all,model_fleet_category,,1,0,0,0
 access_fleet_category_group_system,fleet_category_group_system,model_fleet_category,base.group_system,1,1,1,1
-access_fleet_car_group_user_all,fleet_car_group_user_all,model_fleet_car,,1,0,0,0
-access_fleet_car_group_system,fleet_car_group_system,model_fleet_car,base.group_system,1,1,1,1
 access_fleet_trip_group_user_all,fleet_trip_group_user_all,model_fleet_trip,,1,0,0,0
+access_fleet_trip_group_fleet_user,fleet_trip_group_fleet_user,model_fleet_trip,fleet_trip.group_fleet_user,1,1,1,0
 access_fleet_trip_group_system,fleet_trip_group_system,model_fleet_trip,base.group_system,1,1,1,1
 access_stock_delivery_group_user_all,stock_delivery_group_user_all,model_stock_delivery,,1,0,0,0
 access_stock_delivery_group_system,stock_delivery_group_system,model_stock_delivery,base.group_system,1,1,1,1

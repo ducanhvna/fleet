@@ -27,25 +27,25 @@ class FleetLocation(models.Model):
     name = fields.Char(string='Tên địa điểm', required=True)
 
 
-class FleetCar(models.Model):
-    _name = 'fleet.car'
-    _description = 'Phương Tiện'
-    _order = 'name'
-
-    name = fields.Char(string='Tên phương tiện', required=True)
-    license_plate = fields.Char(string='Biển số', required=True)
-    acquisition_date = fields.Date('Ngày đăng kiểm')
-    vin_sn = fields.Char('Số khung', copy=False)
-    seats = fields.Integer('Số ghế')
-    model_year = fields.Char('Đời xe')
-    color = fields.Char('Màu xe')
-
-    fleet_trip_ids = fields.One2many('fleet.trip', 'car_id', 'Danh sách hành trình', readonly=True)
-
-    def name_get(self):
-        self.browse(self.ids).read(['name', 'license_plate'])
-        return [(car.id, '%s%s' % (car.license_plate and '[%s] ' % car.license_plate or '', car.name))
-                for car in self]
+# class FleetCar(models.Model):
+#     _name = 'fleet.car'
+#     _description = 'Phương Tiện'
+#     _order = 'name'
+#
+#     name = fields.Char(string='Tên phương tiện', required=True)
+#     license_plate = fields.Char(string='Biển số', required=True)
+#     acquisition_date = fields.Date('Ngày đăng kiểm')
+#     vin_sn = fields.Char('Số khung', copy=False)
+#     seats = fields.Integer('Số ghế')
+#     model_year = fields.Char('Đời xe')
+#     color = fields.Char('Màu xe')
+#
+#     fleet_trip_ids = fields.One2many('fleet.trip', 'car_id', 'Danh sách hành trình', readonly=True)
+#
+#     def name_get(self):
+#         self.browse(self.ids).read(['name', 'license_plate'])
+#         return [(car.id, '%s%s' % (car.license_plate and '[%s] ' % car.license_plate or '', car.name))
+#                 for car in self]
 
 
 class ProductTemplate(models.Model):

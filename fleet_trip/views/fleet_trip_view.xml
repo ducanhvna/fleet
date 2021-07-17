@@ -7,7 +7,7 @@
             <tree>
                 <field name="location_id"/>
                 <field name="location_dest_id"/>
-                <field name="car_id"/>
+                <field name="equipment_id"/>
                 <field name="eating_fee"/>
                 <field name="law_money"/>
                 <field name="road_tiket_fee"/>
@@ -16,6 +16,8 @@
                 <field name="odometer_start"/>
                 <field name="odometer_dest"/>
                 <field name="odometer_end"/>
+                <field name="state" optional="show" widget="badge" decoration-success="state == 'done'"
+                       decoration-info="state not in ('done', 'cancel')"/>
             </tree>
         </field>
     </record>
@@ -25,24 +27,35 @@
         <field name="model">fleet.trip</field>
         <field name="arch" type="xml">
             <form>
+                <header>
+                    <button type="object" name="do_start_trip" string="Bắt đầu"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('state','!=','draft')]}"/>
+                    <button type="object" name="do_end_trip" string="Kết thúc"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('state','!=','confirm')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
+                </header>
                 <sheet>
                     <group>
                         <group>
-                            <field name="delivery_id"/>
+                            <field name="employee_id"/>
                             <field name="location_id"/>
                             <field name="location_dest_id"/>
-                            <field name="stock_date"/>
+                            <field name="schedule_date"/>
                             <field name="odometer_start"/>
                             <field name="odometer_dest"/>
                             <field name="odometer_end"/>
                         </group>
                         <group>
-                            <field name="car_id"/>
+                            <field name="equipment_id"/>
                             <field name="eating_fee"/>
                             <field name="law_money"/>
                             <field name="road_tiket_fee"/>
                             <field name="incurred_fee"/>
                             <field name="fee_total"/>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
                         </group>
                         <field name="note" nolabel="1" placeholder="Ghi chú sửa chữa"/>
                     </group>
@@ -62,28 +75,29 @@
         <field name="arch" type="xml">
             <search string="Tìm kiếm">
                 <field name="delivery_id"/>
-                <field name="car_id"/>
+                <field name="equipment_id"/>
                 <field name="location_id"/>
                 <field name="location_dest_id"/>
                 <separator/>
                 <filter name="today" string="Hôm nay" separator="1"
-                        domain="[('stock_date','&lt;=', (datetime.date.today()).strftime('%Y-%m-%d')),
-                        ('stock_date','&gt;=',(datetime.date.today()).strftime('%Y-%m-%d'))]"/>
+                        domain="[('schedule_date','&lt;=', (datetime.date.today()).strftime('%Y-%m-%d')),
+                        ('schedule_date','&gt;=',(datetime.date.today()).strftime('%Y-%m-%d'))]"/>
                 <filter string="Tuần này" name="week"
-                        domain="[('stock_date','&lt;=', (context_today() + relativedelta(weeks=0,day=7, weekday=-1)).strftime('%Y-%m-%d')),
-                        ('stock_date','&gt;=',(context_today() - relativedelta(weeks=1, weekday=0)).strftime('%Y-%m-%d'))]"/>
+                        domain="[('schedule_date','&lt;=', (context_today() + relativedelta(weeks=0,day=7, weekday=-1)).strftime('%Y-%m-%d')),
+                        ('schedule_date','&gt;=',(context_today() - relativedelta(weeks=1, weekday=0)).strftime('%Y-%m-%d'))]"/>
                 <filter string="Tuần trước" name="last_week"
-                        domain="[('stock_date', '&gt;=', ((context_today()+relativedelta(weeks=-2, days=1, weekday=0)).strftime('%Y-%m-%d'))),
-                        ('stock_date', '&lt;=', ((context_today()+relativedelta(weeks=-1,weekday=6)).strftime('%Y-%m-%d')))]"/>
+                        domain="[('schedule_date', '&gt;=', ((context_today()+relativedelta(weeks=-2, days=1, weekday=0)).strftime('%Y-%m-%d'))),
+                        ('schedule_date', '&lt;=', ((context_today()+relativedelta(weeks=-1,weekday=6)).strftime('%Y-%m-%d')))]"/>
                 <filter name="month" string="Tháng này"
-                        domain="['&amp;',('stock_date','&gt;=',(context_today()+relativedelta(day=1)).strftime('%Y-%m-%d')),
-                        ('stock_date','&lt;=',(context_today()+relativedelta(months=1,day=1,days=-1)).strftime('%Y-%m-%d'))]"/>
+                        domain="['&amp;',('schedule_date','&gt;=',(context_today()+relativedelta(day=1)).strftime('%Y-%m-%d')),
+                        ('schedule_date','&lt;=',(context_today()+relativedelta(months=1,day=1,days=-1)).strftime('%Y-%m-%d'))]"/>
                 <filter name="prev_month" string="Tháng trước"
-                        domain="[('stock_date','&gt;=',(context_today()-relativedelta(months=1)).strftime('%Y-%m-01')),
-                        ('stock_date','&lt;',context_today().strftime('%Y-%m-01'))]"/>
+                        domain="[('schedule_date','&gt;=',(context_today()-relativedelta(months=1)).strftime('%Y-%m-01')),
+                        ('schedule_date','&lt;',context_today().strftime('%Y-%m-01'))]"/>
                 <separator/>
                 <group expand="0" string="Group By">
-                    <filter string="Ngày thực hiện" name="group_stock_date" context="{'group_by': 'stock_date:day'}"/>
+                    <filter string="Ngày thực hiện" name="group_schedule_date" context="{'group_by': 'schedule_date:day'}"/>
+                    <filter string="Trạng thái chuyến đi" name="group_state" context="{'group_by': 'state'}"/>
                 </group>
             </search>
         </field>
@@ -100,5 +114,5 @@
               name="Nhật kí hành trình"
               parent="fleet_root_menu"
               action="fleet_trip_action"
-              sequence="10"/>
+              sequence="5"/>
 </odoo>

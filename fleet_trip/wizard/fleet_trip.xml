@@ -44,9 +44,9 @@
                 <field name="location_id"/>
                 <field name="location_dest_id"/>
                 <field name="project_id"/>
-                <field name="stock_date_day"/>
-                <field name="stock_date_month"/>
-                <field name="stock_date_year"/>
+                <field name="schedule_date_day"/>
+                <field name="schedule_date_month"/>
+                <field name="schedule_date_year"/>
                 <field name="license_plate"/>
                 <field name="eating_fee"/>
                 <field name="law_money"/>

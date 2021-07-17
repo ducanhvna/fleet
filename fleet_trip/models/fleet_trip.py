@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
+import base64
 
 
 class FleetTrip(models.Model):
     _name = 'fleet.trip'
-    _rec_name = 'code'
+    _rec_name = 'equipment_id'
     _description = 'Hành trình vận tải'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
-    car_id = fields.Many2one('fleet.car', string='Xe', required=True)
+    equipment_id = fields.Many2one('maintenance.equipment', string='Xe', required=True)
     location_id = fields.Many2one('fleet.location', 'Điểm xuất phát', required=True)
     location_dest_id = fields.Many2one('fleet.location', 'Điểm đích', required=True)
     eating_fee = fields.Monetary('Tiền ăn', required=True)
@@ -23,11 +24,42 @@ class FleetTrip(models.Model):
     odometer_start = fields.Integer('Số CTM xuất phát', required=True)
     odometer_dest = fields.Integer('Số CTM điểm đích', required=True)
     odometer_end = fields.Integer('Số CTM quay về', required=True)
+    employee_id = fields.Many2one('hr.employee', string='Nhân viên', required=True)
+    state = fields.Selection([
+        ('draft', 'Đang Chờ'),
+        ('confirm', 'Đã Xuất Phát'),
+        ('done', 'Hoàn Thành')
+    ], string='Trạng thái', default='draft')
+    schedule_date = fields.Date(string='Ngày thực hiện', required=True)
+    start_date = fields.Datetime(string='Bắt đầu', readonly=True)
+    end_date = fields.Datetime(string='Kết thúc', readonly=True)
 
     delivery_id = fields.Many2one('stock.delivery', string='Phiếu xuất kho')
     code = fields.Char(related='delivery_id.code', store=True)
     project_id = fields.Many2one(related='delivery_id.project_id')
-    stock_date = fields.Date(string='Ngày thực hiện', required=True)
+
+    def do_start_trip(self):
+        self.start_date = fields.Datetime.now()
+        self.state = 'confirm'
+
+    def do_end_trip(self):
+        self.end_date = fields.Datetime.now()
+        self.state = 'done'
+
+    def do_odometer_end(self, odometer_end):
+        # attachment_obj = self.env['ir.attachment']
+        self.odometer_end = odometer_end
+        # if attachments:
+        #     count = 1
+        #     for attachment in attachments:
+        #         attachment_obj.create({
+        #             'name': self.equipment_id.license_plate + str(count),
+        #             'type': 'binary',
+        #             'datas': base64.b64encode(bytes(attachment, 'utf-8')),
+        #             'res_model': 'fleet.trip',
+        #             'res_id': self.id
+        #         })
+        #     count += 1
 
 
 class StockDelvery(models.Model):
@@ -46,7 +78,7 @@ class StockDelvery(models.Model):
     shipping_id = fields.Many2one('res.partner', string='Đơn vị vận chuyển', required=True)
     driver_id = fields.Many2one('res.partner', string='Lái xe', required=True)
     driver_phone = fields.Char(related='driver_id.phone', string='Điện thoại')
-    car_id = fields.Many2one('fleet.car', string='Xe', required=True)
+    equipment_id = fields.Many2one('maintenance.equipment', string='Xe', required=True)
     delivery_line = fields.One2many('stock.delivery.line', 'delivery_id', string='Chi tiết xuất kho')
 
 

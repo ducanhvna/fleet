@@ -13,7 +13,7 @@
                 <field name="partner_receive_id"/>
                 <field name="shipping_id"/>
                 <field name="driver_id"/>
-                <field name="car_id"/>
+                <field name="equipment_id"/>
             </tree>
         </field>
     </record>
@@ -37,7 +37,7 @@
                             <field name="shipping_id"/>
                             <field name="driver_id"/>
                             <field name="driver_phone"/>
-                            <field name="car_id"/>
+                            <field name="equipment_id"/>
                             <field name="code"/>
                         </group>
                     </group>

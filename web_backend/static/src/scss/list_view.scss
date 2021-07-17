@@ -79,7 +79,8 @@
 
     // ------- Style thead -------
     > thead {
-        background-color: white;
+        //background-color: white;
+        background-color: #e2e2e0 !important;
         border: none;
 
         > tr:first-child > th {
@@ -93,9 +94,9 @@
     }
 
     // ------- Decrease table's inner content "visual depth" -------
-    tbody:first-of-type > tr:first-child:not(.o_group_header) {
-        box-shadow: inset 0px 5px 10px -4px rgba(black, 0.1);
-    }
+    //tbody:first-of-type > tr:first-child:not(.o_group_header) {
+    //    box-shadow: inset 0px 5px 10px -4px rgba(black, 0.1);
+    //}
 
     // ------- Force progress bars to respect table's layout -------
     .o_progressbar_cell {

@@ -15,14 +15,14 @@ class FleetTripWizard(models.TransientModel):
         trip_report.search([]).unlink()
 
         fleet_trip = self.env['fleet.trip'].search([
-            ('stock_date', '>=', self.date_from),
-            ('stock_date', '<=', self.date_to)])
+            ('schedule_date', '>=', self.date_from),
+            ('schedule_date', '<=', self.date_to)])
         if not fleet_trip:
             raise ValidationError('Không có dữ liệu!')
         for rec in fleet_trip:
             vals = {
                 'company_id': rec.company_id.id,
-                'car_id': rec.car_id.id,
+                'equipment_id': rec.equipment_id.id,
                 'location_id': rec.location_id.id,
                 'location_dest_id': rec.location_dest_id.id,
                 'eating_fee': rec.eating_fee,
@@ -32,9 +32,9 @@ class FleetTripWizard(models.TransientModel):
                 'note': rec.note,
                 'fee_total': rec.fee_total,
                 'project_id': rec.project_id.id,
-                'stock_date_day': str(rec.stock_date.strftime("%d")),
-                'stock_date_month': str(rec.stock_date.strftime("%m")),
-                'stock_date_year': str(rec.stock_date.strftime("%Y")),
+                'schedule_date_day': str(rec.schedule_date.strftime("%d")),
+                'schedule_date_month': str(rec.schedule_date.strftime("%m")),
+                'schedule_date_year': str(rec.schedule_date.strftime("%Y")),
                 'trip_count': 1}
         trip_report.create(vals)
 
@@ -54,8 +54,8 @@ class FleetTripReport(models.TransientModel):
     _name = 'fleet.trip.report'
 
     company_id = fields.Many2one('res.company', 'Công ty')
-    car_id = fields.Many2one('fleet.car', string='Xe')
-    license_plate = fields.Char(related='car_id.license_plate')
+    equipment_id = fields.Many2one('maintenance.equipment', string='Xe')
+    license_plate = fields.Char(related='equipment_id.license_plate')
     location_id = fields.Many2one('fleet.location', 'Điểm xuất phát')
     location_dest_id = fields.Many2one('fleet.location', 'Điểm đích')
     eating_fee = fields.Float('Tiền ăn')
@@ -65,9 +65,9 @@ class FleetTripReport(models.TransientModel):
     note = fields.Text('Ghi chú sửa chữa')
     fee_total = fields.Float('Tổng cộng')
     project_id = fields.Many2one('fleet.project', string='Dự án')
-    stock_date_day = fields.Char(string='Ngày')
-    stock_date_month = fields.Char(string='Tháng')
-    stock_date_year = fields.Char(string='Năm')
+    schedule_date_day = fields.Char(string='Ngày')
+    schedule_date_month = fields.Char(string='Tháng')
+    schedule_date_year = fields.Char(string='Năm')
 
     fee_total_without_invoice = fields.Float(string='Tổng chưa hóa đơn')
     fee_invoice = fields.Float(string='Hóa đơn')

@@ -44,7 +44,7 @@
                                 <tree>
                                     <field name="location_id"/>
                                     <field name="location_dest_id"/>
-                                    <field name="car_id"/>
+                                    <field name="equipment_id"/>
                                     <field name="odometer_start"/>
                                     <field name="odometer_dest"/>
                                     <field name="odometer_end"/>

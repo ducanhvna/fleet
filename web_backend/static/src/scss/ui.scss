@@ -40,3 +40,16 @@
 .o_searchview .o_searchview_facet .o_searchview_facet_label{
     background-color: #243742 !important;
 }
+.show .dropdown-menu .dropdown-header{
+    color: #666666;
+    font-size: inherit;
+    background-color: #dadada;
+}
+
+.table-striped tbody tr:nth-of-type(odd){
+    //background-color: #e9ecef !important;
+    background-color: #eef0f0 !important;
+}
+//.o_list_view .o_list_table > thead{
+//    background-color: #e2e2e0 !important;
+//}
