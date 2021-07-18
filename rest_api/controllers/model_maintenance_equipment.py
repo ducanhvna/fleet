@@ -10,8 +10,14 @@ OUT_FLEET_TRIP_schema = (
         "name",
         "license_plate",
     ),),
-     "location_id",
-    "location_dest_id",
+    ("location_id", (
+        "id",
+        "name"
+    ),),
+    ("location_dest_id", (
+        "id",
+        "name"
+    ),),
     "start_date",
     "end_date",
     "state",
@@ -21,9 +27,18 @@ OUT_model_res_user_read_one_SCHEMA = (
     "id",
     "name",
     ("employee_id", (
+        "id"
         "mobile_phone",
-        "department_id",
-        "parent_id",
+        "trip_count",
+        "trip_done_count",
+        ("department_id", (
+            "id",
+            "name"
+        ),),
+        ("parent_id", (
+            "id",
+            "name"
+        ),),
         "identification_id",
         "gender",
         "birthday",
@@ -31,7 +46,11 @@ OUT_model_res_user_read_one_SCHEMA = (
             "street",
             "street2",
             "city",
-            "state_id",
+            ("state_id",
+             (
+                 "id",
+                 "name"
+             ),),
             "phone",
             "mobile",
         ),
@@ -42,10 +61,7 @@ OUT_maintenance_equipment_schema = (
     "id",
     "name",
     "last_request",
-    "model",
-    "serial_no",
-    "code",
-    "so_khung"
+    "license_plate",
     "trip_count"
 )
 
@@ -55,10 +71,7 @@ OUT_maintenance_request_schema = (
     ("equipment_id", (
         "id",
         "name",
-        "model",
-        "serial_no",
-        "code",
-        "so_khung"
+        "license_plate",
     )),
     "request_date",
     ("user_id", (
@@ -110,6 +123,16 @@ class ControllerREST(http.Controller):
             success_code=OUT_SUCCESS_CODE,
             OUT_fields=OUT_maintenance_equipment_schema,
             search_more=False)
+
+    @http.route('/api/maintenance.equipment/<id>', methods=['GET'], type='http', auth='none', cors=rest_cors_value)
+    @check_permissions
+    def api_model_maintenance_equipment_id_GET(self, id, **kw):
+        return wrap_resource_read_one(
+            modelname='maintenance.equipment',
+            id=id,
+            success_code=OUT_SUCCESS_CODE,
+            OUT_fields=OUT_maintenance_equipment_schema
+        )
 
     @http.route('/api/maintenance.request', methods=['GET'], type='http', auth='none', cors=rest_cors_value)
     @check_permissions
