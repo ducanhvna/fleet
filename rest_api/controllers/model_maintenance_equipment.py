@@ -27,7 +27,7 @@ OUT_model_res_user_read_one_SCHEMA = (
     "id",
     "name",
     ("employee_id", (
-        "id"
+        "id",
         "mobile_phone",
         "trip_count",
         "trip_done_count",
@@ -62,7 +62,7 @@ OUT_maintenance_equipment_schema = (
     "name",
     "last_request",
     "license_plate",
-    "trip_count"
+    "trip_count",
 )
 
 OUT_maintenance_request_schema = (
