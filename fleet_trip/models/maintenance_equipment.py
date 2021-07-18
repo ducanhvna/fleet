@@ -24,7 +24,7 @@ class MaintenanceEquipment(models.Model):
     @api.depends('trip_ids')
     def _compute_trip_count(self):
         for rec in self:
-            today = datetime.date.today().strftime('%Y-%m-%d')
+            today = datetime.date.today()
             rec. trip_count = len(rec.trip_ids.filtered(lambda x: today <= x.schedule_date >= today))
 
     @api.depends('maintenance_ids', 'maintenance_ids.date_process')
