@@ -99,7 +99,6 @@ OUT_maintenance_request_schema = (
     )),
     "date_process",
     "schedule_date",
-    "trip_count",
 )
 
 
