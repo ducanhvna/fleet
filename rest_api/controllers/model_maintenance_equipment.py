@@ -32,6 +32,7 @@ OUT_model_res_user_read_one_SCHEMA = (
         "mobile_phone",
         "trip_count",
         "trip_done_count",
+        "job_title",
         ("department_id", (
             "id",
             "name"
@@ -80,10 +81,6 @@ OUT_maintenance_request_schema = (
         "name"
     )),
     ("create_uid", (
-        "id",
-        "name"
-    )),
-    ("performer_id", (
         "id",
         "name"
     )),
