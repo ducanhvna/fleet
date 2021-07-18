@@ -46,6 +46,7 @@ OUT_maintenance_equipment_schema = (
     "serial_no",
     "code",
     "so_khung"
+    "trip_count"
 )
 
 OUT_maintenance_request_schema = (
