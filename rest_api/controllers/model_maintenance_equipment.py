@@ -5,6 +5,7 @@ import datetime
 OUT_SUCCESS_CODE = 200
 
 OUT_FLEET_TRIP_schema = (
+    "id",
     ("equipment_id", (
         "id",
         "name",
@@ -122,7 +123,7 @@ class ControllerREST(http.Controller):
             default_domain=domain or [],
             success_code=OUT_SUCCESS_CODE,
             OUT_fields=OUT_maintenance_equipment_schema,
-            search_more=False)
+            search_more=True)
 
     @http.route('/api/maintenance.equipment/<id>', methods=['GET'], type='http', auth='none', cors=rest_cors_value)
     @check_permissions
