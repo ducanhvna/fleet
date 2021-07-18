@@ -60,7 +60,7 @@ class MaintenanceEquipment(models.Model):
         vals = {
             'equipment_id': self.id,
             'name': f'Yêu cầu sửa chữa xe {self.name} - {self.license_plate}',
-            'note': note,
+            'description': note,
         }
         maintenance_request = self.env['maintenance.request'].create(vals)
         return maintenance_request
