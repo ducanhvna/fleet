@@ -92,7 +92,7 @@ OUT_maintenance_request_schema = (
         "id",
         "name"
     )),
-    "note",
+    "description",
     ("stage_id", (
         "id",
         "name"
