@@ -41,7 +41,7 @@
             </xpath>
         </field>
     </record>
-    
+
     <record id="fleet_request_form_view_inherited" model="ir.ui.view">
         <field name="name">maintenance_request_form.view.inherited</field>
         <field name="model">maintenance.request</field>
