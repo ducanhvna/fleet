@@ -20,6 +20,7 @@ class MaintenanceEquipment(models.Model):
     last_request = fields.Date(string='Yêu cầu gần nhất', compute='_get_last_request', store=True)
     trip_ids = fields.One2many('fleet.trip', 'equipment_id')
     trip_count = fields.Integer(string='Số chuyến hôm nay', compute='_compute_trip_count')
+    message_ids = fields.One2many('mail.message', 'res_id', string='Ghi chú')
 
     @api.depends('trip_ids')
     def _compute_trip_count(self):

@@ -19,6 +19,7 @@ OUT_FLEET_TRIP_schema = (
         "id",
         "name"
     ),),
+    "schedule_date",
     "start_date",
     "end_date",
     "state",
@@ -58,7 +59,12 @@ OUT_model_res_user_read_one_SCHEMA = (
             "phone",
             "mobile",
         ),
-    )),
+    ),
+        ("message_ids", [(
+            "date",
+            "body",
+        )]),
+    ),
 ))
 
 OUT_maintenance_equipment_schema = (
@@ -68,6 +74,10 @@ OUT_maintenance_equipment_schema = (
     "license_plate",
     "trip_count",
     "note",
+    ("message_ids", [(
+            "date",
+            "body",
+        )]),
 )
 
 OUT_maintenance_request_schema = (
@@ -186,6 +196,10 @@ class ControllerREST(http.Controller):
             if key == 'date' and val == 'today':
                 domain += [('schedule_date', '>=', today), ('schedule_date', '<=', today)]
                 continue
+            if key == 'from_date':
+                domain += [('schedule_date', '>=', val)]
+            if key == 'to_date':
+                domain += [('schedule_date', '<=', val)]
             domain += [(key, '=', val)]
         return wrap_resource_read_all(
             modelname='fleet.trip',

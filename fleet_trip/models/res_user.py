@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
-import datetime
+from datetime import datetime, timedelta, date
 
 
 class EmployeeUsers(models.Model):
@@ -27,11 +27,14 @@ class HrEmployee(models.Model):
     trip_done_count = fields.Integer(string='Số chuyến hoàn thành', compute='_compute_trip_count')
     other_info = fields.Char(string='Thông tin khác')
     salary_last_month = fields.Float(string='Lương tháng trước')
+    message_ids = fields.One2many('mail.message', 'res_id', string='Ghi chú')
 
     @api.depends('trip_ids')
     def _compute_trip_count(self):
         for rec in self:
-            today = datetime.date.today()
-            rec.trip_count = len(rec.trip_ids.filtered(lambda x: today <= x.schedule_date >= today))
+            today = date.today()
+            start = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+            end = (datetime.now() + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
+            rec.trip_count = len(rec.trip_ids.filtered(lambda x: x.schedule_date >= today and  x.schedule_date <= today))
             rec.trip_done_count = len(rec.trip_ids.filtered(
-                lambda x: today <= x.schedule_date >= today and x.state =='done'))
+                lambda x: x.end_date >= start and x.end_date <= end and x.state =='3_done'))

@@ -17,8 +17,8 @@
                 <field name="odometer_start"/>
                 <field name="odometer_dest"/>
                 <field name="odometer_end"/>
-                <field name="state" optional="show" widget="badge" decoration-success="state == 'done'"
-                       decoration-info="state not in ('done', 'cancel')"/>
+                <field name="state" optional="show" widget="badge" decoration-success="state == '3_done'"
+                       decoration-info="state not in ('3_done', 'cancel')"/>
             </tree>
         </field>
     </record>
@@ -31,11 +31,11 @@
                 <header>
                     <button type="object" name="do_start_trip" string="Bắt đầu"
                         class="oe_highlight"
-                        attrs="{'invisible': [('state','!=','draft')]}"/>
+                        attrs="{'invisible': [('state','!=','1_draft')]}"/>
                     <button type="object" name="do_end_trip" string="Kết thúc"
                         class="oe_highlight"
-                        attrs="{'invisible': [('state','!=','confirm')]}"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
+                        attrs="{'invisible': [('state','!=','2_confirm')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="1_draft,2_confirm,3_done"/>
                 </header>
                 <sheet>
                     <group>
