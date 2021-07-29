@@ -39,4 +39,4 @@ class HrEmployee(models.Model):
             end_trip_ids = rec.trip_ids.filtered(lambda x: x.end_date)
             rec.trip_count = len(trip_ids.filtered(lambda x: x.schedule_date >= today and  x.schedule_date <= today))
             rec.trip_done_count = len(end_trip_ids.filtered(
-                lambda x: x.end_date >= start and x.end_date <= end and x.state =='3_done'))
+                lambda x: x.end_date > start and x.end_date < end and x.state =='3_done'))

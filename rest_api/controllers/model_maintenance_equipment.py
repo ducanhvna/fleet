@@ -193,15 +193,24 @@ class ControllerREST(http.Controller):
                 val = literal_eval(val)
             except:
                 pass
-            if key == 'date' and val == 'today':
-                domain += [('schedule_date', '>=', today), ('schedule_date', '<=', today)]
+            if key == 'date':
+                if val == 'today':
+                    domain += [('schedule_date', '>=', today), ('schedule_date', '<=', today)]
                 continue
+
             if key == 'from_date':
-                domain += [('schedule_date', '>=', val)]
+                if val:
+                    domain += [('schedule_date', '>=', val)]
                 continue
             if key == 'to_date':
-                domain += [('schedule_date', '<=', val)]
+                if val:
+                    domain += [('schedule_date', '<=', val)]
                 continue
+            if key == 'state':
+                if val:
+                    domain += [('state', '=', val)]
+                continue
+
             domain += [(key, '=', val)]
         return wrap_resource_read_all(
             modelname='fleet.trip',
