@@ -26,10 +26,10 @@ class FleetTrip(models.Model):
     odometer_end = fields.Integer('Số CTM quay về', required=True)
     employee_id = fields.Many2one('hr.employee', string='Nhân viên', required=True)
     state = fields.Selection([
-        ('draft', 'Đang Chờ'),
-        ('confirm', 'Đã Xuất Phát'),
-        ('done', 'Hoàn Thành')
-    ], string='Trạng thái', default='draft')
+        ('1_draft', 'Đang Chờ'),
+        ('2_confirm', 'Đã Xuất Phát'),
+        ('3_done', 'Hoàn Thành')
+    ], string='Trạng thái', default='1_draft')
     schedule_date = fields.Date(string='Ngày thực hiện', required=True)
     start_date = fields.Datetime(string='Bắt đầu', readonly=True)
     end_date = fields.Datetime(string='Kết thúc', readonly=True)
@@ -40,11 +40,15 @@ class FleetTrip(models.Model):
 
     def do_start_trip(self):
         self.start_date = fields.Datetime.now()
-        self.state = 'confirm'
+        self.state = '2_confirm'
 
     def do_end_trip(self):
         self.end_date = fields.Datetime.now()
-        self.state = 'done'
+        self.state = '3_done'
+
+    def do_odometer_start(self, odometer_start):
+        # attachment_obj = self.env['ir.attachment']
+        self.odometer_start = odometer_start
 
     def do_odometer_end(self, odometer_end):
         # attachment_obj = self.env['ir.attachment']

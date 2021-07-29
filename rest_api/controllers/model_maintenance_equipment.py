@@ -32,6 +32,8 @@ OUT_model_res_user_read_one_SCHEMA = (
         "mobile_phone",
         "trip_count",
         "trip_done_count",
+        "other_info",
+        "salary_last_month",
         "job_title",
         ("department_id", (
             "id",
@@ -65,6 +67,7 @@ OUT_maintenance_equipment_schema = (
     "last_request",
     "license_plate",
     "trip_count",
+    "note",
 )
 
 OUT_maintenance_request_schema = (
@@ -188,7 +191,8 @@ class ControllerREST(http.Controller):
             modelname='fleet.trip',
             default_domain=domain or [],
             success_code=OUT_SUCCESS_CODE,
-            OUT_fields=OUT_FLEET_TRIP_schema)
+            OUT_fields=OUT_FLEET_TRIP_schema,
+            order_data='create_date desc, state')
 
     @http.route('/api/fleet.trip/<id>/<method>', methods=['PUT'], type='http', auth='none',
                 cors=rest_cors_value,

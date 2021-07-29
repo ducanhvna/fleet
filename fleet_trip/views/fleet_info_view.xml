@@ -46,4 +46,18 @@
               action="fleet_category_action"
               sequence="50"/>
 
+    <record id="view_employee_form_inherited" model="ir.ui.view">
+        <field name="name">hr.employee.view.inherited</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='work_email']" position="after">
+                <field name="salary_last_month"/>
+            </xpath>
+             <xpath expr="//field[@name='coach_id']" position="after">
+                <field name="other_info"/>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>
