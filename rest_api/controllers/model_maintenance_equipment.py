@@ -198,8 +198,10 @@ class ControllerREST(http.Controller):
                 continue
             if key == 'from_date':
                 domain += [('schedule_date', '>=', val)]
+                continue
             if key == 'to_date':
                 domain += [('schedule_date', '<=', val)]
+                continue
             domain += [(key, '=', val)]
         return wrap_resource_read_all(
             modelname='fleet.trip',
