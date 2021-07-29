@@ -63,6 +63,10 @@ OUT_model_res_user_read_one_SCHEMA = (
         ("message_ids", [(
             "date",
             "body",
+            ("author_id", (
+                "id",
+                "name"
+            )),
         )]),
     ),
 ))
@@ -77,6 +81,10 @@ OUT_maintenance_equipment_schema = (
     ("message_ids", [(
             "date",
             "body",
+            ("author_id", (
+                "id",
+                "name"
+            )),
         )]),
 )
 
