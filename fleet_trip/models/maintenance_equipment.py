@@ -26,7 +26,7 @@ class MaintenanceEquipment(models.Model):
     def _compute_trip_count(self):
         for rec in self:
             today = datetime.date.today()
-            rec. trip_count = len(rec.trip_ids.filtered(lambda x: today <= x.schedule_date >= today))
+            rec. trip_count = len(rec.trip_ids.filtered(lambda x: x.schedule_date == today))
 
     @api.depends('maintenance_ids', 'maintenance_ids.date_process')
     def _get_last_request(self):
