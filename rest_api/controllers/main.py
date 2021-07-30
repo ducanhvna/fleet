@@ -9,7 +9,7 @@ try:
 except ImportError:
     import json
 import base64
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 import werkzeug.wrappers
 
@@ -52,9 +52,9 @@ def get_fields_values_from_one_record(record, fields_list, pre_schema=True):
             # Convert Date/Datetime values to (old) string representation
             if isinstance(val, date):
                 if isinstance(val, datetime):
-                    val = fields.Datetime.to_string(val)
+                    val = fields.Datetime.to_string(val + timedelta(hours=7))
                 else:
-                    val = fields.Date.to_string(val)
+                    val = fields.Date.to_string(val + timedelta(hours=7))
             
             if not isinstance(val, models.BaseModel):
                 result[field] = val  if (val or '0' in str(val))  else None
