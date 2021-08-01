@@ -2,6 +2,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 import base64
+import requests
 
 
 class FleetTrip(models.Model):
@@ -50,20 +51,18 @@ class FleetTrip(models.Model):
         # attachment_obj = self.env['ir.attachment']
         self.odometer_start = odometer_start
 
-    def do_odometer_end(self, odometer_end):
-        # attachment_obj = self.env['ir.attachment']
+    def do_odometer_end(self, odometer_end, attachments=[]):
         self.odometer_end = odometer_end
-        # if attachments:
-        #     count = 1
-        #     for attachment in attachments:
-        #         attachment_obj.create({
-        #             'name': self.equipment_id.license_plate + str(count),
-        #             'type': 'binary',
-        #             'datas': base64.b64encode(bytes(attachment, 'utf-8')),
-        #             'res_model': 'fleet.trip',
-        #             'res_id': self.id
-        #         })
-        #     count += 1
+        if not attachments:
+            return True
+        for attachment in attachments:
+            datas = base64.b64encode(requests.get(attachment).content)
+            self.env['ir.attachment'].create({
+                'name': self.name,
+                'datas': datas,
+                'res_model': 'fleet.trip',
+                'res_id': self.id,
+            })
 
 
 class StockDelvery(models.Model):

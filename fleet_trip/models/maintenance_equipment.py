@@ -3,6 +3,7 @@ import datetime
 import qrcode
 import base64
 import io
+import requests
 
 
 class MaintenanceEquipment(models.Model):
@@ -56,7 +57,7 @@ class MaintenanceEquipment(models.Model):
             base64_encoded_result_str = base64_encoded_result_bytes.decode('ascii')
             return base64_encoded_result_str
 
-    def create_maintenance_request(self, note):
+    def create_maintenance_request(self, note, attachments=[]):
 
         vals = {
             'equipment_id': self.id,
@@ -64,6 +65,17 @@ class MaintenanceEquipment(models.Model):
             'description': note,
         }
         maintenance_request = self.env['maintenance.request'].create(vals)
+
+        if not attachments:
+            return maintenance_request
+        for attachment in attachments:
+            datas = base64.b64encode(requests.get(attachment).content)
+            self.env['ir.attachment'].create({
+                'name': maintenance_request.name,
+                'datas': datas,
+                'res_model': 'maintenance.request',
+                'res_id': maintenance_request.id,
+            })
         return maintenance_request
 
 
