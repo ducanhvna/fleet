@@ -47,9 +47,18 @@ class FleetTrip(models.Model):
         self.end_date = fields.Datetime.now()
         self.state = '3_done'
 
-    def do_odometer_start(self, odometer_start):
-        # attachment_obj = self.env['ir.attachment']
+    def do_odometer_start(self, odometer_start, attachments=[]):
         self.odometer_start = odometer_start
+        if not attachments:
+            return True
+        for attachment in attachments:
+            datas = base64.b64encode(requests.get(attachment).content)
+            self.env['ir.attachment'].create({
+                'name': self.name,
+                'datas': datas,
+                'res_model': 'fleet.trip',
+                'res_id': self.id,
+            })
 
     def do_odometer_end(self, odometer_end, attachments=[]):
         self.odometer_end = odometer_end
