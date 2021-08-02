@@ -65,14 +65,13 @@ class MaintenanceEquipment(models.Model):
             'description': note,
         }
         maintenance_request = self.env['maintenance.request'].create(vals)
-
         if not attachments:
             return maintenance_request
         for attachment in attachments:
-            datas = base64.b64encode(requests.get(attachment).content)
             self.env['ir.attachment'].create({
                 'name': maintenance_request.name,
-                'datas': datas,
+                'type': 'url',
+                'url': attachment,
                 'res_model': 'maintenance.request',
                 'res_id': maintenance_request.id,
             })

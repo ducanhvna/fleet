@@ -52,10 +52,10 @@ class FleetTrip(models.Model):
         if not attachments:
             return True
         for attachment in attachments:
-            datas = base64.b64encode(requests.get(attachment).content)
             self.env['ir.attachment'].create({
                 'name': self.name,
-                'datas': datas,
+                'type': 'url',
+                'url': attachment,
                 'res_model': 'fleet.trip',
                 'res_id': self.id,
             })
@@ -65,10 +65,10 @@ class FleetTrip(models.Model):
         if not attachments:
             return True
         for attachment in attachments:
-            datas = base64.b64encode(requests.get(attachment).content)
             self.env['ir.attachment'].create({
                 'name': self.name,
-                'datas': datas,
+                'type': 'url',
+                'url': attachment,
                 'res_model': 'fleet.trip',
                 'res_id': self.id,
             })

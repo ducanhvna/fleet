@@ -4,7 +4,7 @@
     'description': 'Fleet Trip',
     'category': 'fleet',
     'version': '14.0.1.0.0',
-    'depends': ['product', 'contacts', 'hr', 'maintenance', 'web_backend', 'rest_api'],
+    'depends': ['product', 'contacts', 'hr', 'maintenance', 'web_backend', 'rest_api', 'ir_attachment_url'],
     'data': [
         'security/fleet_security.xml',
         'security/ir.model.access.csv',
