@@ -53,7 +53,7 @@ class FleetTrip(models.Model):
             return True
         for attachment in attachments:
             self.env['ir.attachment'].create({
-                'name': self.name,
+                'name': self.equipment_id.name,
                 'type': 'url',
                 'url': attachment,
                 'res_model': 'fleet.trip',
@@ -66,7 +66,7 @@ class FleetTrip(models.Model):
             return True
         for attachment in attachments:
             self.env['ir.attachment'].create({
-                'name': self.name,
+                'name': self.equipment_id.name,
                 'type': 'url',
                 'url': attachment,
                 'res_model': 'fleet.trip',
