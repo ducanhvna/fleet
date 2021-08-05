@@ -151,7 +151,7 @@ class ControllerREST(http.Controller):
             response=json.dumps({
                 'success': True,
                 'data': {
-                    'uid': uid,
+                    'user_id': uid,
                     'user_context': user_context,
                     'company_id': company_id,
                     'access_token': access_token,
