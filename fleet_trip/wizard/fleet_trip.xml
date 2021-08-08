@@ -6,7 +6,7 @@
         <field name="model">fleet.trip.wizard</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Bảng tổng hợp giám đốc">
+            <form string="Bảng tổng hợp">
                 <sheet>
                     <group string="Ngày báo cáo">
                         <group>
@@ -26,14 +26,14 @@
         </field>
     </record>
     <record id="action_fleet_trip_wizard" model="ir.actions.act_window">
-        <field name="name">Bảng tổng hợp giám đốc</field>
+        <field name="name">Bảng tổng hợp</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">fleet.trip.wizard</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>
 
-    <menuitem name ="Bảng tổng hợp giám đốc" id='menu_action_fleet_trip_report' parent="fleet_trip_report"
+    <menuitem name ="Bảng tổng hợp" id='menu_action_fleet_trip_report' parent="fleet_trip_report"
               action="action_fleet_trip_wizard" sequence="10"/>
 
     <record id="fleet_trip_tree_report_view" model="ir.ui.view">

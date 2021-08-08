@@ -13,18 +13,18 @@ class FleetTrip(models.Model):
 
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
-    equipment_id = fields.Many2one('maintenance.equipment', string='Xe', required=True)
-    location_id = fields.Many2one('fleet.location', 'Điểm xuất phát', required=True)
-    location_dest_id = fields.Many2one('fleet.location', 'Điểm đích', required=True)
+    equipment_id = fields.Many2one('maintenance.equipment', string='Xe')
+    location_id = fields.Many2one('fleet.location', 'Điểm xuất phát')
+    location_dest_id = fields.Many2one('fleet.location', 'Điểm đích')
     eating_fee = fields.Monetary('Tiền ăn', required=True)
     law_money = fields.Monetary('Tiền luật', required=True)
     road_tiket_fee = fields.Monetary('Vé cầu đường', required=True)
     incurred_fee = fields.Monetary('Phát sinh')
     note = fields.Text('Ghi chú sửa chữa')
-    fee_total = fields.Monetary('Tổng cộng')
-    odometer_start = fields.Integer('Số CTM xuất phát', required=True)
-    odometer_dest = fields.Integer('Số CTM điểm đích', required=True)
-    odometer_end = fields.Integer('Số CTM quay về', required=True)
+    fee_total = fields.Monetary('Tổng cộng', compute='_compute_fee_total')
+    odometer_start = fields.Integer('Số CTM xuất phát')
+    odometer_dest = fields.Integer('Số CTM điểm đích')
+    odometer_end = fields.Integer('Số CTM quay về')
     employee_id = fields.Many2one('hr.employee', string='Nhân viên', required=True)
     state = fields.Selection([
         ('1_draft', 'Đang Chờ'),
@@ -38,6 +38,17 @@ class FleetTrip(models.Model):
     delivery_id = fields.Many2one('stock.delivery', string='Phiếu xuất kho')
     code = fields.Char(related='delivery_id.code', store=True)
     project_id = fields.Many2one(related='delivery_id.project_id')
+
+    @api.onchange("employee_id")
+    def _onchange_employee_id(self):
+        if self.employee_id and self.employee_id.equipment_id:
+            self.equipment_id = self.employee_id.equipment_id.id
+
+
+    @api.depends("eating_fee", "law_money", "road_tiket_fee", "incurred_fee")
+    def _compute_fee_total(self):
+        for rec in self:
+            rec.fee_total = rec.eating_fee + rec.law_money + rec.road_tiket_fee + rec.incurred_fee
 
     def do_start_trip(self):
         self.start_date = fields.Datetime.now()

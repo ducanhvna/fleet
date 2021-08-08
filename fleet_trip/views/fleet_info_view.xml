@@ -54,7 +54,11 @@
             <xpath expr="//field[@name='work_email']" position="after">
                 <field name="salary_last_month"/>
             </xpath>
-             <xpath expr="//field[@name='coach_id']" position="after">
+            <xpath expr="//field[@name='coach_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+             <xpath expr="//field[@name='parent_id']" position="after">
+                 <field name="equipment_id"/>
                 <field name="other_info"/>
             </xpath>
         </field>
