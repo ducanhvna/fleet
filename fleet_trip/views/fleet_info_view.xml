@@ -58,7 +58,7 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
              <xpath expr="//field[@name='parent_id']" position="after">
-                 <field name="equipment_id"/>
+<!--                 <field name="equipment_id"/>-->
                 <field name="other_info"/>
             </xpath>
         </field>

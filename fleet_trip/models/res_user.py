@@ -29,7 +29,7 @@ class HrEmployee(models.Model):
     other_info = fields.Char(string='Thông tin khác')
     salary_last_month = fields.Float(string='Lương tháng trước')
     message_ids = fields.One2many('mail.message', 'res_id', string='Ghi chú')
-    equipment_id = fields.Many2one('maintenance.equipment', string='Phụ trách xe')
+    # equipment_id = fields.Many2one('maintenance.equipment', string='Phụ trách xe')
 
     @api.depends('trip_ids')
     def _compute_trip_count(self):

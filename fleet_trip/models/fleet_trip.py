@@ -41,8 +41,11 @@ class FleetTrip(models.Model):
 
     @api.onchange("employee_id")
     def _onchange_employee_id(self):
-        if self.employee_id and self.employee_id.equipment_id:
-            self.equipment_id = self.employee_id.equipment_id.id
+        if self.employee_id and self.employee_id.user_id:
+            equipment_id = self.env['maintenance.equipment'].search([
+                ('owner_user_id', '=', self.employee_id.user_id.id)], limit=1)
+            if equipment_id:
+                self.equipment_id = equipment_id.id
 
 
     @api.depends("eating_fee", "law_money", "road_tiket_fee", "incurred_fee")
