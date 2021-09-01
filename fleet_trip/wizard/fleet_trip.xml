@@ -34,7 +34,7 @@
     </record>
 
     <menuitem name ="Bảng tổng hợp" id='menu_action_fleet_trip_report' parent="fleet_trip_report"
-              action="action_fleet_trip_wizard" sequence="10"/>
+              action="action_fleet_trip_wizard" sequence="50"/>
 
     <record id="fleet_trip_tree_report_view" model="ir.ui.view">
         <field name="name">fleet.trip.report.tree.view</field>

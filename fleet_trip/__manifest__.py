@@ -16,6 +16,7 @@
         'views/product_view.xml',
         'views/stock_delivery_view.xml',
         'wizard/fleet_trip.xml',
+        'report/fleet_main_report_view.xml',
     ],
     'application': True,
     'installable': True,
