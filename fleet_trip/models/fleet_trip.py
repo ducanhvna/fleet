@@ -14,30 +14,75 @@ class FleetTrip(models.Model):
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
     equipment_id = fields.Many2one('maintenance.equipment', string='Xe')
+    location_name = fields.Char(string='Tên điểm đầu')
+    location_dest_name = fields.Char(string='Tên điểm đích')
     location_id = fields.Many2one('fleet.location', 'Điểm xuất phát')
     location_dest_id = fields.Many2one('fleet.location', 'Điểm đích')
-    eating_fee = fields.Monetary('Tiền ăn', required=True)
-    law_money = fields.Monetary('Tiền luật', required=True)
-    road_tiket_fee = fields.Monetary('Vé cầu đường', required=True)
+    eating_fee = fields.Monetary('Tiền ăn')
+    law_money = fields.Monetary('Tiền luật')
+    road_tiket_fee = fields.Monetary('Vé cầu đường')
     incurred_fee = fields.Monetary('Phát sinh')
+    incurred_note = fields.Char('Ghi chú phát sinh')
+    incurred_fee_2 = fields.Monetary('Phát sinh 2')
+    incurred_note_2 = fields.Char('Ghi chú phát sinh 2')
     note = fields.Text('Ghi chú sửa chữa')
     fee_total = fields.Monetary('Tổng cộng', compute='_compute_fee_total')
     odometer_start = fields.Integer('Số CTM xuất phát')
     odometer_dest = fields.Integer('Số CTM điểm đích')
     odometer_end = fields.Integer('Số CTM quay về')
-    employee_id = fields.Many2one('hr.employee', string='Nhân viên', required=True)
+    employee_id = fields.Many2one('hr.employee', string='Nhân viên')
     state = fields.Selection([
         ('1_draft', 'Đang Chờ'),
         ('2_confirm', 'Đã Xuất Phát'),
         ('3_done', 'Hoàn Thành')
     ], string='Trạng thái', default='1_draft')
-    schedule_date = fields.Date(string='Ngày thực hiện', required=True)
+    schedule_date = fields.Date(string='Ngày thực hiện')
     start_date = fields.Datetime(string='Bắt đầu', readonly=True)
     end_date = fields.Datetime(string='Kết thúc', readonly=True)
 
     delivery_id = fields.Many2one('stock.delivery', string='Phiếu xuất kho')
     code = fields.Char(related='delivery_id.code', store=True)
     project_id = fields.Many2one(related='delivery_id.project_id')
+
+    district_id = fields.Many2one('res.country.district', string='Huyện', domain="[('state_id', '=', state_id)]")
+    ward_id = fields.Many2one('res.country.ward', string='Xã', domain="[('district_id', '=', district_id)]")
+    state_id = fields.Many2one("res.country.state", string='Tỉnh', ondelete='restrict',
+                               domain="[('country_id', '=', country_id)]")
+
+    location_compute_name = fields.Char(string='Nơi xuất phát', compute='_compute_location_compute_name')
+    location_dest_compute_name = fields.Char(string='Nơi đến', compute='_compute_location_dest_compute_name')
+
+    district_dest_id = fields.Many2one('res.country.district', string='Huyện', domain="[('state_id', '=', state_dest_id)]")
+    ward_dest_id = fields.Many2one('res.country.ward', string='Xã', domain="[('district_id', '=', district_dest_id)]")
+    state_dest_id = fields.Many2one("res.country.state", string='Tỉnh', ondelete='restrict',
+                               domain="[('country_id', '=', country_id)]")
+
+    country_id = fields.Many2one('res.country', default=241, string='Quốc gia', ondelete='restrict')
+    company_name = fields.Char(string='Công ty')
+
+    @api.depends("district_id", "ward_id", "state_id")
+    def _compute_location_compute_name(self):
+        for rec in self:
+            location_compute_name = ''
+            if rec.ward_id:
+                location_compute_name += rec.ward_id.name
+            if rec.district_id:
+                location_compute_name += (', ' if location_compute_name else '') + rec.district_id.name
+            if rec.state_id:
+                location_compute_name += (', ' if location_compute_name else '') + rec.state_id.name
+            rec.location_compute_name = location_compute_name
+
+    @api.depends("district_dest_id", "ward_dest_id", "state_dest_id")
+    def _compute_location_dest_compute_name(self):
+        for rec in self:
+            location_dest_compute_name = ''
+            if rec.ward_dest_id:
+                location_dest_compute_name += rec.ward_dest_id.name
+            if rec.district_dest_id:
+                location_dest_compute_name += (', ' if location_dest_compute_name else '') + rec.district_dest_id.name
+            if rec.state_id:
+                location_dest_compute_name += (', ' if location_dest_compute_name else '') + rec.state_dest_id.name
+            rec.location_dest_compute_name = location_dest_compute_name
 
     @api.onchange("employee_id")
     def _onchange_employee_id(self):
@@ -48,10 +93,10 @@ class FleetTrip(models.Model):
                 self.equipment_id = equipment_id.id
 
 
-    @api.depends("eating_fee", "law_money", "road_tiket_fee", "incurred_fee")
+    @api.depends("eating_fee", "law_money", "road_tiket_fee", "incurred_fee", "incurred_fee_2")
     def _compute_fee_total(self):
         for rec in self:
-            rec.fee_total = rec.eating_fee + rec.law_money + rec.road_tiket_fee + rec.incurred_fee
+            rec.fee_total = rec.eating_fee + rec.law_money + rec.road_tiket_fee + rec.incurred_fee + rec.incurred_fee_2
 
     def do_start_trip(self):
         self.start_date = fields.Datetime.now()

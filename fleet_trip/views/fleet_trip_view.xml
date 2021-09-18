@@ -8,15 +8,23 @@
                 <field name="employee_id"/>
                 <field name="location_id"/>
                 <field name="location_dest_id"/>
+                <field name="location_name"/>
+                <field name="location_dest_name"/>
                 <field name="equipment_id"/>
                 <field name="eating_fee"/>
                 <field name="law_money"/>
                 <field name="road_tiket_fee"/>
                 <field name="incurred_fee"/>
+                <field name="incurred_note"/>
+                <field name="incurred_fee_2"/>
+                <field name="incurred_note_2"/>
+                <field name="company_name"/>
                 <field name="fee_total" sum="Tổng"/>
                 <field name="odometer_start"/>
                 <field name="odometer_dest"/>
                 <field name="odometer_end"/>
+                <field name="location_compute_name"/>
+                <field name="location_dest_compute_name"/>
                 <field name="state" optional="show" widget="badge" decoration-success="state == '3_done'"
                        decoration-info="state not in ('3_done', 'cancel')"/>
             </tree>
@@ -40,24 +48,49 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="employee_id"/>
+                            <field name="equipment_id"/>
                             <field name="location_id"/>
-                            <field name="location_dest_id"/>
+                            <field name="location_name"/>
+                            <label for="ward_id" string="Nơi xuất phát"/>
+                            <div class="o_address_format">
+                                <field name="ward_id" placeholder="Xã/Phường" class="o_address_city"/>
+                                <field name="district_id" placeholder="Quận/Huyện" class="o_address_zip"/>
+                                <field name="state_id" class="o_address_state" placeholder="Tỉnh/TP"/>
+                            </div>
                             <field name="schedule_date"/>
                             <field name="odometer_start"/>
-                            <field name="odometer_dest"/>
-                            <field name="odometer_end"/>
+                            <field name="start_date"/>
                         </group>
                         <group>
-                            <field name="equipment_id"/>
+                            <field name="employee_id"/>
+                            <field name="location_dest_id"/>
+                            <field name="location_dest_name"/>
+                            <label for="ward_dest_id" string="Nơi xuất phát"/>
+                            <div class="o_address_format">
+                                <field name="ward_dest_id" placeholder="Xã/Phường" class="o_address_city"/>
+                                <field name="district_dest_id" placeholder="Quận/Huyện" class="o_address_zip"/>
+                                <field name="state_dest_id" class="o_address_state" placeholder="Tỉnh/TP"/>
+                            </div>
+                            <field name="odometer_dest"/>
+                            <field name="odometer_end"/>
+                            <field name="end_date"/>
+                            <field name="company_name" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
                             <field name="eating_fee"/>
                             <field name="law_money"/>
                             <field name="road_tiket_fee"/>
-                            <field name="incurred_fee"/>
                             <field name="fee_total"/>
-                            <field name="start_date"/>
-                            <field name="end_date"/>
                         </group>
+                        <group>
+                            <field name="incurred_fee"/>
+                            <field name="incurred_note"/>
+                            <field name="incurred_fee_2"/>
+                            <field name="incurred_note_2"/>
+                        </group>
+                        <field name="country_id" invisible="1"/>
                         <field name="note" nolabel="1" placeholder="Ghi chú sửa chữa"/>
                     </group>
                 </sheet>

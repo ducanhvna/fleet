@@ -3,6 +3,15 @@ from .main import *
 import datetime
 
 OUT_SUCCESS_CODE = 200
+OUT_address_schema = (
+    "id",
+    "name",
+)
+
+OUT_fleet_location_schema = (
+    "id",
+    "name"
+)
 
 OUT_FLEET_TRIP_schema = (
     "id",
@@ -19,10 +28,23 @@ OUT_FLEET_TRIP_schema = (
         "id",
         "name"
     ),),
+    "location_name",
+    "location_dest_name",
+    "incurred_fee",
+    "incurred_note",
+    "incurred_fee_2",
+    "incurred_note_2",
     "schedule_date",
     "start_date",
     "end_date",
     "state",
+    "ward_id",
+    "district_id",
+    "state_id",
+    "ward_dest_id",
+    "district_dest_id",
+    "state_dest_id",
+    "company_name",
 )
 
 OUT_model_res_user_read_one_SCHEMA = (
@@ -238,4 +260,85 @@ class ControllerREST(http.Controller):
             method=method,
             success_code=OUT_SUCCESS_CODE
         )
+
+    @http.route('/api/province', methods=['GET'], type='http', auth='none', csrf=False, cors=rest_cors_value)
+    @check_permissions
+    def api_model_province_info_id_GET(self, **kw):
+        return wrap_resource_read_all(
+            modelname="res.country.state",
+            default_domain=[('country_id', '=', 241)],
+            success_code=200,
+            OUT_fields=OUT_address_schema,
+        )
+
+    @http.route('/api/district', methods=['GET'], type='http', auth='none', csrf=False, cors=rest_cors_value)
+    @check_permissions
+    def api_model_district_info_id_GET(self, **kw):
+        domain = []
+        for key, val in request.httprequest.args.items():
+            try:
+                val = literal_eval(val)
+            except:
+                pass
+            if not val:
+                continue
+            domain += [(key, '=', val)]
+        return wrap_resource_read_all(
+            modelname="res.country.district",
+            default_domain=domain or [],
+            success_code=200,
+            OUT_fields=OUT_address_schema,
+        )
+
+    @http.route('/api/ward', methods=['GET'], type='http', auth='none', csrf=False, cors=rest_cors_value)
+    @check_permissions
+    def api_model_ward_info_id_GET(self, **kw):
+        domain = []
+        for key, val in request.httprequest.args.items():
+            try:
+                val = literal_eval(val)
+            except:
+                pass
+            if not val:
+                continue
+            domain += [(key, '=', val)]
+        return wrap_resource_read_all(
+            modelname="res.country.ward",
+            default_domain=domain or [],
+            success_code=200,
+            OUT_fields=OUT_address_schema,
+        )
+
+    @http.route('/api/fleet.location', methods=['GET'], type='http', auth='none', csrf=False, cors=rest_cors_value)
+    @check_permissions
+    def api_model_fleet_location_id_GET(self, **kw):
+        domain = []
+        for key, val in request.httprequest.args.items():
+            try:
+                val = literal_eval(val)
+            except:
+                pass
+            if not val:
+                continue
+            domain += [(key, '=', val)]
+        return wrap_resource_read_all(
+            modelname="fleet.location",
+            default_domain=domain or [],
+            success_code=200,
+            OUT_fields=OUT_fleet_location_schema,
+        )
+
+    @http.route('/api/fleet.trip', methods=['POST'], type='http', auth='none', cors=rest_cors_value, csrf=False)
+    @check_permissions
+    def api_model_fleet_trip_POST(self, **kw):
+        uid = request.session.uid
+        employee_id = request.env['hr.employee'].sudo().search([('user_id', '=', uid)])
+        employee_id = employee_id.id if employee_id else False
+        return wrap_resource_create_one(
+            modelname='fleet.trip',
+            default_vals={'country_id': 241, 'employee_id': employee_id},
+            success_code=200,
+            OUT_fields=OUT_FLEET_TRIP_schema
+        )
+
 

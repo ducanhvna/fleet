@@ -545,6 +545,8 @@ def check_permissions(func):
         
         # Get access token from http header
         access_token = request.httprequest.headers.get('access_token')
+        if access_token:
+            access_token = access_token.replace(',', '')
         if not access_token:
             error_descrip = "No access token was provided in request header!"
             error = 'no_access_token'
