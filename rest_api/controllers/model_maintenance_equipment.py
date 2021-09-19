@@ -145,7 +145,39 @@ OUT_maintenance_request_schema = (
 )
 
 
+OUT_model_res_user_create_one_SCHEMA = (
+    "id",
+    "name",
+    "login",
+)
+
+
 class ControllerREST(http.Controller):
+
+    @http.route('/api/res.users', methods=['POST'], type='http', auth='none', cors=rest_cors_value, csrf=False)
+    # @check_permissions
+    def api_model_res_users_POST(self, **kw):
+        data = json.loads(request.httprequest.data)
+        register_token = data.get("register_token")
+        if not register_token:
+            return error_response(400, 'Error', 'Register token is required!')
+        company_id = http.request.env.ref('base.main_company')
+        token = company_id.token_register_account
+        if not token or token != register_token:
+            return error_response(400, 'Error', 'Token is invalid!')
+
+        name, email, password = data.get('name'), data.get('email'), data.get('password')
+        if not name or not email or not password:
+            return error_response(400, 'Error', 'All fields must be filled out!')
+        user_obj = request.env['res.users'].with_user(SUPERUSER_ID)
+
+        already_email = user_obj.search([("login", "=", email)])
+
+        if already_email:
+            return error_response(400, 'Error', 'Account already exists!')
+
+        access_token = user_obj.create_by_api(name, email, password, company_id)
+        return successful_response(201, {'success': True, 'access_token': access_token})
 
     @http.route('/api/maintenance.equipment', methods=['GET'], type='http', auth='none', cors=rest_cors_value)
     @check_permissions

@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
+
+    <record id="view_company_form_streep_inherit" model="ir.ui.view">
+        <field name="name">res.company.form.view.inherit.kimlong</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="priority">40</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='currency_id']" position="after">
+                <field name="token_register_account"/>
+            </xpath>
+        </field>
+    </record>
+
     <record id="fleet_project_tree_view" model="ir.ui.view">
         <field name="name">fleet.project.tree.view</field>
         <field name="model">fleet.project</field>
