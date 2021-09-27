@@ -10,7 +10,10 @@ OUT_address_schema = (
 
 OUT_fleet_location_schema = (
     "id",
-    "name"
+    "name",
+    ("ward_id", ("id", "name")),
+    ("district_id", ("id", "name")),
+    ("state_id", ("id", "name")),
 )
 
 OUT_FLEET_TRIP_schema = (
@@ -20,14 +23,14 @@ OUT_FLEET_TRIP_schema = (
         "name",
         "license_plate",
     ),),
-    ("location_id", (
-        "id",
-        "name"
-    ),),
-    ("location_dest_id", (
-        "id",
-        "name"
-    ),),
+    # ("location_id", (
+    #     "id",
+    #     "name"
+    # ),),
+    # ("location_dest_id", (
+    #     "id",
+    #     "name"
+    # ),),
     "location_name",
     "location_dest_name",
     "incurred_fee",
@@ -45,11 +48,16 @@ OUT_FLEET_TRIP_schema = (
     "district_dest_id",
     "state_dest_id",
     "company_name",
+    "eating_fee",
+    "law_money",
+    "road_tiket_fee",
+    "fee_total",
 )
 
 OUT_model_res_user_read_one_SCHEMA = (
     "id",
     "name",
+    ("equipment_ids", [("id", "name", "license_plate", "trip_count", "last_request")]),
     ("employee_id", (
         "id",
         "mobile_phone",
@@ -57,6 +65,9 @@ OUT_model_res_user_read_one_SCHEMA = (
         "trip_done_count",
         "other_info",
         "salary_last_month",
+        "contract_date",
+        ("payroll_ids", [("id", "name", "total_amount")]),
+        "payroll_total_amount",
         "job_title",
         ("department_id", (
             "id",
@@ -96,6 +107,7 @@ OUT_model_res_user_read_one_SCHEMA = (
 OUT_maintenance_equipment_schema = (
     "id",
     "name",
+    ("owner_user_id", ("id", "name")),
     "last_request",
     "license_plate",
     "trip_count",

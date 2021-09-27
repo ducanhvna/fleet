@@ -24,7 +24,20 @@ class FleetLocation(models.Model):
     _description = 'Địa điểm'
     _order = 'name'
 
-    name = fields.Char(string='Tên địa điểm', required=True)
+    name = fields.Char(string='Tên vị trí', required=True)
+    district_id = fields.Many2one('res.country.district', string='Huyện', domain="[('state_id', '=', state_id)]")
+    ward_id = fields.Many2one('res.country.ward', string='Xã', domain="[('district_id', '=', district_id)]")
+    state_id = fields.Many2one("res.country.state", string='Tỉnh', ondelete='restrict',
+                               domain="[('country_id', '=', country_id)]")
+    country_id = fields.Many2one('res.country', default=241, string='Quốc gia', ondelete='restrict')
+    
+    @api.model
+    def create(self, vals_list):
+        num_location = len(self.env['fleet.location'].search([]))
+        if num_location > 3:
+            raise ValidationError('Chỉ có thể tạo tối đa 3 địa điểm!')
+        return super(FleetLocation, self).create(vals_list)
+
 
 
 # class FleetCar(models.Model):

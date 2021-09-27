@@ -12,6 +12,7 @@ class EmployeeUsers(models.Model):
     employee_id = fields.Many2one('hr.employee',
                                   string='Related Employee', ondelete='restrict',
                                   help='Employee-related data of the user', auto_join=True)
+    equipment_ids = fields.One2many("maintenance.equipment", "owner_user_id")
 
     @api.model
     def create(self, vals):
@@ -60,7 +61,14 @@ class HrEmployee(models.Model):
     other_info = fields.Char(string='Thông tin khác')
     salary_last_month = fields.Float(string='Lương tháng trước')
     message_ids = fields.One2many('mail.message', 'res_id', string='Ghi chú')
-    # equipment_id = fields.Many2one('maintenance.equipment', string='Phụ trách xe')
+    contract_date = fields.Date(string='Ngày kí hợp đồng')
+    payroll_ids = fields.One2many('hr.employee.payroll', 'employee_id', string='Thông tin thu nhập')
+    payroll_total_amount = fields.Float(string='Tổng thu nhập', compute="_compute_payroll_total_amount")
+
+    @api.depends("payroll_ids")
+    def _compute_payroll_total_amount(self):
+        for rec in self:
+            rec.payroll_total_amount = sum([line.total_amount for line in rec.payroll_ids])
 
     @api.depends('trip_ids')
     def _compute_trip_count(self):
@@ -69,6 +77,15 @@ class HrEmployee(models.Model):
             trip_ids = rec.trip_ids.filtered(lambda x: x.schedule_date)
             rec.trip_count = len(trip_ids.filtered(lambda x: x.schedule_date == today))
             rec.trip_done_count = len(trip_ids.filtered(lambda x: x.schedule_date == today and x.state =='3_done'))
+
+
+class HrEmployeePayroll(models.Model):
+    _name = 'hr.employee.payroll'
+    _order = 'id desc'
+
+    employee_id = fields.Many2one("hr.employee", string='Nhân viên')
+    name = fields.Char(string='Ghi chú')
+    total_amount = fields.Float(string='Số tiền')
 
 
 class InheritResCompany(models.Model):

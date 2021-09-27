@@ -16,8 +16,8 @@ class FleetTrip(models.Model):
     equipment_id = fields.Many2one('maintenance.equipment', string='Xe')
     location_name = fields.Char(string='Tên điểm đầu')
     location_dest_name = fields.Char(string='Tên điểm đích')
-    location_id = fields.Many2one('fleet.location', 'Điểm xuất phát')
-    location_dest_id = fields.Many2one('fleet.location', 'Điểm đích')
+    # location_id = fields.Many2one('fleet.location', 'Điểm xuất phát')
+    # location_dest_id = fields.Many2one('fleet.location', 'Điểm đích')
     eating_fee = fields.Monetary('Tiền ăn')
     law_money = fields.Monetary('Tiền luật')
     road_tiket_fee = fields.Monetary('Vé cầu đường')
@@ -84,6 +84,11 @@ class FleetTrip(models.Model):
                 location_dest_compute_name += (', ' if location_dest_compute_name else '') + rec.state_dest_id.name
             rec.location_dest_compute_name = location_dest_compute_name
 
+    @api.onchange("equipment_id")
+    def _onchange_equipment_id(self):
+        if self.equipment_id and self.equipment_id.owner_user_id and self.equipment_id.owner_user_id.employee_id:
+            self.employee_id = self.equipment_id.owner_user_id.employee_id.id
+
     @api.onchange("employee_id")
     def _onchange_employee_id(self):
         if self.employee_id and self.employee_id.user_id:
@@ -91,7 +96,6 @@ class FleetTrip(models.Model):
                 ('owner_user_id', '=', self.employee_id.user_id.id)], limit=1)
             if equipment_id:
                 self.equipment_id = equipment_id.id
-
 
     @api.depends("eating_fee", "law_money", "road_tiket_fee", "incurred_fee", "incurred_fee_2")
     def _compute_fee_total(self):
