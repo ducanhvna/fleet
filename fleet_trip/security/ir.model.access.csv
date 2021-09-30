@@ -1,6 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_fleet_location_group_user_all,fleet_location_group_user_all,model_fleet_location,,1,0,0,0
-access_fleet_location_group_system,fleet_location_group_system,model_fleet_location,base.group_system,1,1,1,1
+access_fleet_location_group_system,fleet_location_group_system,model_fleet_location,base.group_system,1,1,0,0
 access_fleet_project_group_user_all,fleet_project_group_user_all,model_fleet_project,,1,0,0,0
 access_fleet_project_group_system,fleet_project_group_system,model_fleet_project,base.group_system,1,1,1,1
 access_fleet_category_group_user_all,fleet_category_group_user_all,model_fleet_category,,1,0,0,0

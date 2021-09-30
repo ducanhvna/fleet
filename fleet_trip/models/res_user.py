@@ -84,8 +84,30 @@ class HrEmployeePayroll(models.Model):
     _order = 'id desc'
 
     employee_id = fields.Many2one("hr.employee", string='Nhân viên')
+    month = fields.Selection(
+        [("1", "Tháng 1"), ("2", "Tháng 2"), ("3", "Tháng 3"), ("4", "Tháng 4"), ("5", "Tháng 5"), ("6", "Tháng 6"),
+         ("7", "Tháng 7"), ("8", "Tháng 8"), ("9", "Tháng 9"), ("10", "Tháng 10"), ("11", "Tháng 11"),
+         ("12", "Tháng 12")], string="Tháng", required=True)
+    year = fields.Char(string='Năm', required=True, default=datetime.now().year)
     name = fields.Char(string='Ghi chú')
-    total_amount = fields.Float(string='Số tiền')
+    payroll_amount = fields.Float(string='Lương', required=True)
+    bonus_amount = fields.Float(string='Phụ cấp')
+    total_amount = fields.Float(string='Tổng thu nhập', compute='_compute_total_amount')
+
+    @api.onchange("month")
+    def _onchange_month(self):
+        if self.month and self.year and not self.name:
+            self.name = f'Thu nhập {self.month}/{self.year}'
+
+    @api.onchange("year")
+    def _onchange_year(self):
+        if self.month and self.year and not self.name:
+            self.name = f'Thu nhập {self.month}/{self.year}'
+
+    @api.depends("payroll_amount", "bonus_amount")
+    def _compute_total_amount(self):
+        for rec in self:
+            rec.total_amount = rec.payroll_amount + rec.bonus_amount
 
 
 class InheritResCompany(models.Model):

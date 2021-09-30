@@ -25,6 +25,7 @@ class FleetLocation(models.Model):
     _order = 'name'
 
     name = fields.Char(string='Tên vị trí', required=True)
+    code = fields.Char(readonly=True)
     district_id = fields.Many2one('res.country.district', string='Huyện', domain="[('state_id', '=', state_id)]")
     ward_id = fields.Many2one('res.country.ward', string='Xã', domain="[('district_id', '=', district_id)]")
     state_id = fields.Many2one("res.country.state", string='Tỉnh', ondelete='restrict',

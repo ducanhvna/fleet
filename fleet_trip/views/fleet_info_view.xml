@@ -71,8 +71,13 @@
             <xpath expr="//page[last()]" position="after">
                  <page string="Thông tin thu nhập" name="payroll_ids">
                      <field name="payroll_ids" nolabel="1">
-                         <tree editable="top">
+                         <tree create="0" edit="0" delete="0">
+                             <field name="month"/>
+                             <field name="year"/>
                              <field name="name"/>
+                             <field name="employee_id"/>
+                             <field name="payroll_amount"/>
+                             <field name="bonus_amount"/>
                              <field name="total_amount"/>
                          </tree>
                      </field>
@@ -138,6 +143,52 @@
               name="Danh sách vị trí"
               parent="fleet_config_menu"
               action="fleet_location_action"
+              sequence="60"/>
+
+
+    <record id="hr_employee_payroll_tree_view" model="ir.ui.view">
+        <field name="name">hr.employee.payroll.tree.view</field>
+        <field name="model">hr.employee.payroll</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="month"/>
+                <field name="year"/>
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="payroll_amount"/>
+                <field name="bonus_amount"/>
+                <field name="total_amount"/>
+            </tree>
+        </field>
+    </record>
+    <record id="hr_employee_payroll_search_view" model="ir.ui.view">
+        <field name="name">hr.employee.payroll.view.search</field>
+        <field name="model">hr.employee.payroll</field>
+        <field name="arch" type="xml">
+            <search string="Tìm kiếm">
+                <field name="month"/>
+                <field name="year"/>
+                <field name="employee_id"/>
+                <group expand="1" string="Group By">
+                    <filter string="Theo tháng" name="group_by_month" context="{'group_by': 'month'}"/>
+                    <filter string="Theo năm" name="group_by_year" context="{'group_by': 'year'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_employee_payroll_action" model="ir.actions.act_window">
+        <field name="name">Bảng lương</field>
+        <field name="res_model">hr.employee.payroll</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree</field>
+<!--        <field name="context">{'search_default_group_by_month':True}</field>-->
+    </record>
+
+    <menuitem id="hr_employee_payroll_menu"
+              name="Bảng lương"
+              parent="hr.menu_hr_employee_payroll"
+              action="hr_employee_payroll_action"
               sequence="60"/>
 
 </odoo>
