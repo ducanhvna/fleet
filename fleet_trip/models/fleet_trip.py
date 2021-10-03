@@ -109,7 +109,7 @@ class FleetTrip(models.Model):
                 location_dest_compute_name += rec.ward_dest_id.name
             if rec.district_dest_id:
                 location_dest_compute_name += (', ' if location_dest_compute_name else '') + rec.district_dest_id.name
-            if rec.state_id:
+            if rec.state_dest_id:
                 location_dest_compute_name += (', ' if location_dest_compute_name else '') + rec.state_dest_id.name
             rec.location_dest_compute_name = location_dest_compute_name
 
