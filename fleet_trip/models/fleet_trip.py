@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 import base64
@@ -32,11 +33,11 @@ class FleetTrip(models.Model):
     incurred_note = fields.Char('Ghi chú phát sinh')
     incurred_fee_2 = fields.Monetary('Phát sinh 2')
     incurred_note_2 = fields.Char('Ghi chú phát sinh 2')
-    note = fields.Text('Ghi chú sửa chữa')
+    note = fields.Text('Ghi chú hành trình')
     fee_total = fields.Monetary('Tổng cộng', compute='_compute_fee_total')
     odometer_start = fields.Integer('Số CTM xuất phát')
     odometer_dest = fields.Integer('Số CTM điểm đích')
-    odometer_end = fields.Integer('Số CTM quay về')
+    odometer_end = fields.Integer('Số KM hành trình', compute='_compute_odometer_end', compute_sudo=True, store=True)
     employee_id = fields.Many2one('hr.employee', string='Nhân viên')
     state = fields.Selection([
         ('1_draft', 'Đang Chờ'),
@@ -66,6 +67,9 @@ class FleetTrip(models.Model):
 
     country_id = fields.Many2one('res.country', default=241, string='Quốc gia', ondelete='restrict')
     company_name = fields.Char(string='Công ty')
+    fleet_product_id = fields.Many2one('fleet.product', string='Mặt hàng', ondelete='restrict')
+    address_start = fields.Char(string="Địa chỉ xuất phát")
+    address_end = fields.Char(string="Địa chỉ đích")
 
     @api.onchange("location_id")
     def onchange_location_id(self):
@@ -164,6 +168,25 @@ class FleetTrip(models.Model):
                 'res_model': 'fleet.trip',
                 'res_id': self.id,
             })
+
+    @api.depends('odometer_start', 'odometer_dest')
+    def _compute_odometer_end(self):
+        for record in self:
+            odometer_total = record.odometer_dest - record.odometer_start
+            record.odometer_end = odometer_total if odometer_total >= 0 else 0
+
+    @api.constrains('odometer_start', 'odometer_dest')
+    def _constrains_odometer_start_odometer_dest(self):
+        for record in self:
+            if record.odometer_start >= record.odometer_dest:
+                raise ValidationError(_('Số CTM điểm đích phải lớn hơn Số CTM xuất phát.'))
+            yesterday = fields.Date.from_string(record.schedule_date) + relativedelta(days=-1)
+            domain = [('equipment_id', '=', record.equipment_id.id),
+                      ('schedule_date', '=', yesterday)]
+            fleet_strip_yesterday = self.search(domain, limit=1)
+            if fleet_strip_yesterday and fleet_strip_yesterday.odometer_dest > record.odometer_start:
+                raise ValidationError(_('Số CTM xuất phát phải lớn hơn hoặc bằng Số CTM điểm đích hôm trước.'))
+
 
 
 class StockDelvery(models.Model):

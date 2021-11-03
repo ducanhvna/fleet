@@ -51,6 +51,7 @@
                     <group>
                         <group>
                             <field name="equipment_id"/>
+                            <field name="schedule_date"/>
                             <field name="location_name"/>
                             <field name="location_id" widget="radio" string="Chọn điểm đầu"/>
                             <label for="ward_id" string="Nơi xuất phát"/>
@@ -58,14 +59,14 @@
                                 <field name="state_id" class="o_address_state" placeholder="Tỉnh/TP"/>
                                 <field name="district_id" placeholder="Quận/Huyện" class="o_address_zip"/>
                                 <field name="ward_id" placeholder="Xã/Phường" class="o_address_city"/>
+                                <field name="address_start" placeholder="Địa chỉ"/>
                             </div>
-                            <field name="schedule_date"/>
                             <field name="odometer_start"/>
                             <field name="start_date"/>
                         </group>
                         <group>
                             <field name="employee_id"/>
-
+                            <field name="fleet_product_id"/>
                             <field name="location_dest_name"/>
                             <field name="location_dest_id" widget="radio" string="Chọn điểm cuối"/>
                             <label for="ward_dest_id" string="Nơi đến"/>
@@ -73,6 +74,7 @@
                                 <field name="state_dest_id" class="o_address_state" placeholder="Tỉnh/TP"/>
                                 <field name="district_dest_id" placeholder="Quận/Huyện" class="o_address_zip"/>
                                 <field name="ward_dest_id" placeholder="Xã/Phường" class="o_address_city"/>
+                                <field name="address_end" placeholder="Địa chỉ"/>
                             </div>
                             <field name="odometer_dest"/>
                             <field name="odometer_end"/>
@@ -94,7 +96,7 @@
                             <field name="incurred_note_2"/>
                         </group>
                         <field name="country_id" invisible="1"/>
-                        <field name="note" nolabel="1" placeholder="Ghi chú sửa chữa"/>
+                        <field name="note" nolabel="1" placeholder="Ghi chú hành trình"/>
                     </group>
                 </sheet>
                 <div class="oe_chatter">

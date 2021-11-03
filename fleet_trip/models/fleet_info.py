@@ -67,3 +67,11 @@ class ProductTemplate(models.Model):
 
     section = fields.Char(string='Tiết diện')
     product_length = fields.Integer(string='Dài')
+
+
+class FleetProduct(models.Model):
+    _name = 'fleet.product'
+    _description = 'Mặt hàng'
+    _order = 'name'
+
+    name = fields.Char(string='Tên mặt hàng', required=True)
