@@ -9,6 +9,7 @@ import requests
 class FleetTrip(models.Model):
     _name = 'fleet.trip'
     _rec_name = 'equipment_id'
+    _order = 'schedule_date asc'
     _description = 'Hành trình vận tải'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
@@ -37,7 +38,7 @@ class FleetTrip(models.Model):
     fee_total = fields.Monetary('Tổng cộng', compute='_compute_fee_total')
     odometer_start = fields.Integer('Số CTM xuất phát')
     odometer_dest = fields.Integer('Số CTM điểm đích')
-    odometer_end = fields.Integer('Số KM hành trình', compute='_compute_odometer_end', compute_sudo=True, store=True)
+    odometer_end = fields.Integer('Số KM hành trình', compute='_compute_odometer_end', store=True)
     employee_id = fields.Many2one('hr.employee', string='Nhân viên')
     state = fields.Selection([
         ('1_draft', 'Đang Chờ'),
@@ -57,13 +58,21 @@ class FleetTrip(models.Model):
     state_id = fields.Many2one("res.country.state", string='Tỉnh', ondelete='restrict',
                                domain="[('country_id', '=', country_id)]")
 
-    location_compute_name = fields.Char(string='Nơi xuất phát', compute='_compute_location_compute_name')
-    location_dest_compute_name = fields.Char(string='Nơi đến', compute='_compute_location_dest_compute_name')
+    location_start_district_state = fields.Char(string='Địa chỉ điểm đi',
+                                                compute='_compute_location_start_district_state')
+    location_dest_district_state = fields.Char(string='Địa chỉ điểm đến',
+                                               compute='_compute_location_dest_district_state')
 
-    district_dest_id = fields.Many2one('res.country.district', string='Huyện', domain="[('state_id', '=', state_dest_id)]")
+    location_compute_name = fields.Char(string='Nơi xuất phát',
+                                        compute='_compute_location_compute_name')
+    location_dest_compute_name = fields.Char(string='Nơi đến',
+                                             compute='_compute_location_dest_compute_name')
+
+    district_dest_id = fields.Many2one('res.country.district', string='Huyện',
+                                       domain="[('state_id', '=', state_dest_id)]")
     ward_dest_id = fields.Many2one('res.country.ward', string='Xã', domain="[('district_id', '=', district_dest_id)]")
     state_dest_id = fields.Many2one("res.country.state", string='Tỉnh', ondelete='restrict',
-                               domain="[('country_id', '=', country_id)]")
+                                    domain="[('country_id', '=', country_id)]")
 
     country_id = fields.Many2one('res.country', default=241, string='Quốc gia', ondelete='restrict')
     company_name = fields.Char(string='Công ty')
@@ -95,27 +104,27 @@ class FleetTrip(models.Model):
 
     @api.depends("district_id", "ward_id", "state_id")
     def _compute_location_compute_name(self):
-        for rec in self:
-            location_compute_name = ''
-            if rec.ward_id:
-                location_compute_name += rec.ward_id.name
-            if rec.district_id:
-                location_compute_name += (', ' if location_compute_name else '') + rec.district_id.name
-            if rec.state_id:
-                location_compute_name += (', ' if location_compute_name else '') + rec.state_id.name
-            rec.location_compute_name = location_compute_name
+        for record in self:
+            location_name = []
+            if record.ward_id:
+                location_name.append(record.ward_id.name or '')
+            if record.district_id:
+                location_name.append(record.district_id.name or '')
+            if record.state_id:
+                location_name.append(record.state_id.name or '')
+            record.location_compute_name = ','.join(location_name)
 
     @api.depends("district_dest_id", "ward_dest_id", "state_dest_id")
     def _compute_location_dest_compute_name(self):
-        for rec in self:
-            location_dest_compute_name = ''
-            if rec.ward_dest_id:
-                location_dest_compute_name += rec.ward_dest_id.name
-            if rec.district_dest_id:
-                location_dest_compute_name += (', ' if location_dest_compute_name else '') + rec.district_dest_id.name
-            if rec.state_dest_id:
-                location_dest_compute_name += (', ' if location_dest_compute_name else '') + rec.state_dest_id.name
-            rec.location_dest_compute_name = location_dest_compute_name
+        for record in self:
+            location_name = []
+            if record.ward_dest_id:
+                location_name.append(record.ward_dest_id.name or '')
+            if record.district_dest_id:
+                location_name.append(record.district_dest_id.name or '')
+            if record.state_dest_id:
+                location_name.append(record.state_dest_id.name or '')
+            record.location_dest_compute_name = ','.join(location_name)
 
     @api.onchange("equipment_id")
     def _onchange_equipment_id(self):
@@ -175,6 +184,26 @@ class FleetTrip(models.Model):
             odometer_total = record.odometer_dest - record.odometer_start
             record.odometer_end = odometer_total if odometer_total >= 0 else 0
 
+    @api.depends("district_id", "state_id")
+    def _compute_location_start_district_state(self):
+        for record in self:
+            location_name = []
+            if record.district_id:
+                location_name.append(record.district_id.name or '')
+            if record.state_id:
+                location_name.append(record.state_id.name or '')
+            record.location_start_district_state = ','.join(location_name)
+
+    @api.depends("district_dest_id", "state_dest_id")
+    def _compute_location_dest_district_state(self):
+        for record in self:
+            location_name = []
+            if record.district_dest_id:
+                location_name.append(record.district_dest_id.name or '')
+            if record.state_dest_id:
+                location_name.append(record.state_dest_id.name or '')
+            record.location_dest_district_state = ','.join(location_name)
+
     @api.constrains('odometer_start', 'odometer_dest')
     def _constrains_odometer_start_odometer_dest(self):
         for record in self:
@@ -186,7 +215,6 @@ class FleetTrip(models.Model):
             fleet_strip_yesterday = self.search(domain, limit=1)
             if fleet_strip_yesterday and fleet_strip_yesterday.odometer_dest > record.odometer_start:
                 raise ValidationError(_('Số CTM xuất phát phải lớn hơn hoặc bằng Số CTM điểm đích hôm trước.'))
-
 
 
 class StockDelvery(models.Model):
@@ -221,4 +249,3 @@ class StockDelveryLine(models.Model):
     out_qty = fields.Float(string='SL Xuất')
     bao_qty = fields.Float(string='Bao')
     note = fields.Text(string='Ghi chú')
-

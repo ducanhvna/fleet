@@ -7,12 +7,10 @@
             <tree>
                 <field name="employee_id"/>
                 <field name="schedule_date"/>
-<!--                <field name="location_id"/>-->
-<!--                <field name="location_dest_id"/>-->
-
-                <field name="location_name"/>
-                <field name="location_dest_name"/>
                 <field name="equipment_id"/>
+                <field name="fleet_product_id"/>
+                <field name="location_start_district_state" string="Tên điểm đi"/>
+                <field name="location_dest_district_state" string="Tên điểm đến"/>
                 <field name="eating_fee"/>
                 <field name="law_money"/>
                 <field name="road_tiket_fee"/>
@@ -20,15 +18,12 @@
                 <field name="incurred_note"/>
                 <field name="incurred_fee_2"/>
                 <field name="incurred_note_2"/>
-                <field name="company_name"/>
+                <field name="company_name" string="Xác nhận"/>
                 <field name="fee_total" sum="Tổng"/>
-                <field name="odometer_start"/>
-                <field name="odometer_dest"/>
-                <field name="odometer_end"/>
-                <field name="location_compute_name"/>
-                <field name="location_dest_compute_name"/>
-                <field name="state" optional="show" widget="badge" decoration-success="state == '3_done'"
-                       decoration-info="state not in ('3_done', 'cancel')"/>
+                <field name="note" string="Ghi chú chuyến đi"/>
+                <field name="odometer_start" string="CMT đi"/>
+                <field name="odometer_dest" string="CMT đến"/>
+                <field name="odometer_end" string="Chiều dài hành trình"/>
             </tree>
         </field>
     </record>
@@ -40,11 +35,11 @@
             <form>
                 <header>
                     <button type="object" name="do_start_trip" string="Bắt đầu"
-                        class="oe_highlight"
-                        attrs="{'invisible': [('state','!=','1_draft')]}"/>
+                            class="oe_highlight"
+                            attrs="{'invisible': [('state','!=','1_draft')]}"/>
                     <button type="object" name="do_end_trip" string="Kết thúc"
-                        class="oe_highlight"
-                        attrs="{'invisible': [('state','!=','2_confirm')]}"/>
+                            class="oe_highlight"
+                            attrs="{'invisible': [('state','!=','2_confirm')]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="1_draft,2_confirm,3_done"/>
                 </header>
                 <sheet>
@@ -94,6 +89,10 @@
                             <field name="incurred_note"/>
                             <field name="incurred_fee_2"/>
                             <field name="incurred_note_2"/>
+                            <field name="location_start_district_state" string="Tên điểm đi"/>
+                            <field name="location_dest_district_state" string="Tên điểm đến"/>
+                            <field name="location_compute_name" sring="Địa chỉ điểm đi"/>
+                            <field name="location_dest_compute_name" string="Địa chỉ điểm đến"/>
                         </group>
                         <field name="country_id" invisible="1"/>
                         <field name="note" nolabel="1" placeholder="Ghi chú hành trình"/>
@@ -115,8 +114,8 @@
             <search string="Tìm kiếm">
                 <field name="delivery_id"/>
                 <field name="equipment_id"/>
-<!--                <field name="location_id"/>-->
-<!--                <field name="location_dest_id"/>-->
+                <!--                <field name="location_id"/>-->
+                <!--                <field name="location_dest_id"/>-->
                 <separator/>
                 <filter name="today" string="Hôm nay" separator="1"
                         domain="[('schedule_date','&lt;=', (datetime.date.today()).strftime('%Y-%m-%d')),
@@ -135,7 +134,8 @@
                         ('schedule_date','&lt;',context_today().strftime('%Y-%m-01'))]"/>
                 <separator/>
                 <group expand="0" string="Group By">
-                    <filter string="Ngày thực hiện" name="group_schedule_date" context="{'group_by': 'schedule_date:day'}"/>
+                    <filter string="Ngày thực hiện" name="group_schedule_date"
+                            context="{'group_by': 'schedule_date:day'}"/>
                     <filter string="Trạng thái chuyến đi" name="group_state" context="{'group_by': 'state'}"/>
                 </group>
             </search>
