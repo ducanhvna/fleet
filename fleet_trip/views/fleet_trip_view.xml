@@ -9,8 +9,12 @@
                 <field name="schedule_date"/>
                 <field name="equipment_id"/>
                 <field name="fleet_product_id"/>
-                <field name="location_start_district_state" string="Tên điểm đi"/>
-                <field name="location_dest_district_state" string="Tên điểm đến"/>
+                <field name="url_trip_image" widget="url"/>
+                <field name="location_name" string="Tên điểm đi"/>
+                <field name="location_dest_name" string="Tên điểm đến"/>
+                <field name="location_start_district_state" string="Địa chỉ điểm đi"/>
+                <field name="location_dest_district_state" string="Địa chỉ điểm đến"/>
+
                 <field name="eating_fee"/>
                 <field name="law_money"/>
                 <field name="road_tiket_fee"/>
@@ -24,6 +28,10 @@
                 <field name="odometer_start" string="CMT đi"/>
                 <field name="odometer_dest" string="CMT đến"/>
                 <field name="odometer_end" string="Chiều dài hành trình"/>
+                <field name="start_hour"/>
+                <field name="end_hour"/>
+                <field name="location_compute_name" string="Địa chỉ điểm đi"/>
+                <field name="location_dest_compute_name" string="Địa chỉ điểm đến"/>
             </tree>
         </field>
     </record>

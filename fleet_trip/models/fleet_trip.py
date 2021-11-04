@@ -79,6 +79,9 @@ class FleetTrip(models.Model):
     fleet_product_id = fields.Many2one('fleet.product', string='Mặt hàng', ondelete='restrict')
     address_start = fields.Char(string="Địa chỉ xuất phát")
     address_end = fields.Char(string="Địa chỉ đích")
+    start_hour = fields.Datetime(string="Giờ xuất phát")
+    end_hour = fields.Datetime(string="Giờ đến đích")
+    url_trip_image = fields.Char(string='Ảnh hành trình')
 
     @api.onchange("location_id")
     def onchange_location_id(self):
@@ -215,6 +218,15 @@ class FleetTrip(models.Model):
             fleet_strip_yesterday = self.search(domain, limit=1)
             if fleet_strip_yesterday and fleet_strip_yesterday.odometer_dest > record.odometer_start:
                 raise ValidationError(_('Số CTM xuất phát phải lớn hơn hoặc bằng Số CTM điểm đích hôm trước.'))
+
+    @api.onchange('location_id', 'location_dest_id')
+    def onchange_location(self):
+        company_name = ''
+        if self.location_id:
+            company_name = "NM" + self.location_id
+        elif self.location_dest_id:
+            company_name = "NM" + self.location_dest_id
+        self.company_name = company_name
 
 
 class StockDelvery(models.Model):

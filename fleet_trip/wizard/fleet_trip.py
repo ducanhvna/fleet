@@ -23,8 +23,8 @@ class FleetTripWizard(models.TransientModel):
             vals = {
                 'company_id': rec.company_id.id,
                 'equipment_id': rec.equipment_id.id,
-                'location_id': rec.location_id.id,
-                'location_dest_id': rec.location_dest_id.id,
+                'location_id': rec.location_id,
+                'location_dest_id': rec.location_dest_id,
                 'eating_fee': rec.eating_fee,
                 'law_money': rec.law_money,
                 'road_tiket_fee': rec.road_tiket_fee,
