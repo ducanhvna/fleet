@@ -20,6 +20,7 @@
         'views/product_view.xml',
         'views/stock_delivery_view.xml',
         'wizard/fleet_trip.xml',
+        'wizard/fleet_trip_cost_generate_view.xml',
         'report/fleet_main_report_view.xml',
     ],
     'application': True,
