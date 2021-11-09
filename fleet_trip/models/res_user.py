@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
 from datetime import datetime, timedelta, date
-# from odoo.addons.rest_api.controllers.main import generate_token, token_store
-from ...rest_api.controllers.main import generate_token, token_store
+from odoo.addons.rest_api.controllers.main import generate_token, token_store
 import time
 import sys
 
