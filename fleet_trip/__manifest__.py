@@ -8,7 +8,6 @@
                 'vn_address'],
     'data': [
         'data/location_data.xml',
-        'data/product_data.xml',
         'security/fleet_security.xml',
         'security/ir.model.access.csv',
         'views/menu.xml',
@@ -22,6 +21,7 @@
         'wizard/fleet_trip.xml',
         'wizard/fleet_trip_cost_generate_view.xml',
         'report/fleet_main_report_view.xml',
+        'data/product_data.xml',
     ],
     'application': True,
     'installable': True,
