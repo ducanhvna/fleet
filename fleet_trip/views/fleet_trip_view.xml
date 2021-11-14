@@ -14,7 +14,16 @@
                 <field name="location_dest_name" string="Tên điểm đến"/>
                 <field name="location_start_district_state" string="Địa chỉ điểm đi"/>
                 <field name="location_dest_district_state" string="Địa chỉ điểm đến"/>
-
+                <button name="approve"
+                        confirm="Bạn có chắc chắn muốn phê duyệt hành trình này không?"
+                        groups="fleet_trip.group_fleet_manager"
+                        attrs="{'invisible': [('is_approved','=',True)]}"
+                        type="object" class="fa fa-check-square"/>
+                <button name="reject"
+                        confirm="Bạn có chắc chắn muốn từ chối hành trình này không?"
+                        groups="fleet_trip.group_fleet_manager"
+                        attrs="{'invisible': [('is_approved','=',True)]}"
+                        type="object" class="fa fa-window-close"/>
                 <field name="eating_fee"/>
                 <field name="law_money"/>
                 <field name="road_tiket_fee"/>
@@ -32,6 +41,7 @@
                 <field name="end_hour"/>
                 <field name="location_compute_name" string="Địa chỉ điểm đi"/>
                 <field name="location_dest_compute_name" string="Địa chỉ điểm đến"/>
+                <field name="is_approved" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -97,10 +107,6 @@
                             <field name="incurred_note"/>
                             <field name="incurred_fee_2"/>
                             <field name="incurred_note_2"/>
-                            <field name="location_start_district_state" string="Tên điểm đi"/>
-                            <field name="location_dest_district_state" string="Tên điểm đến"/>
-                            <field name="location_compute_name" sring="Địa chỉ điểm đi"/>
-                            <field name="location_dest_compute_name" string="Địa chỉ điểm đến"/>
                         </group>
                         <field name="country_id" invisible="1"/>
                         <field name="note" nolabel="1" placeholder="Ghi chú hành trình"/>

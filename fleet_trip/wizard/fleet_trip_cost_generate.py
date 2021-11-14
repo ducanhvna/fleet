@@ -5,19 +5,19 @@ SQL_GENERATE_FLEET_TRIP_COST_REPORT = """
 DELETE FROM fleet_trip_cost_report WHERE id is not null;
 INSERT INTO fleet_trip_cost_report
 (schedule_date, equipment_id, invoice_amount, bill_content, oil_amount, number_of_oil, machine_amount, create_uid)
-SELECT ft.schedule_date   AS schedule_date,
-       ft.equipment_id    AS equipment_id,
-       fmr.invoice_amount AS invoice_amount,
-       fmr.bill_content   AS bill_content,
-       fmr.oil_amount     AS oil_amount,
-       fmr.number_of_oil  AS number_of_oil,
-       fmr.machine_amount AS machine_amount,
-       {create_uid}                  AS create_uid
-FROM fleet_trip ft
-         LEFT JOIN fleet_main_report fmr
-                   ON ft.equipment_id = fmr.equipment_id AND ft.schedule_date = fmr.date
-WHERE ft.schedule_date BETWEEN '{from_date}' AND '{to_date}'
-ORDER BY ft.schedule_date asc;
+SELECT fr.date                         AS schedule_date,
+       fr.equipment_id                 AS equipment_id,
+       fr.invoice_amount               AS invoice_amount,
+       fr.bill_content                 AS bill_content,
+       fr.oil_amount                   AS oil_amount,
+       fr.number_of_oil                AS number_of_oil,
+       fr.machine_amount               AS machine_amount,
+       {create_uid}                    AS create_uid
+FROM fleet_main_report fr
+LEFT JOIN fleet_trip ft
+ON fr.equipment_id = ft.equipment_id AND fr.date = ft.schedule_date
+WHERE fr.date BETWEEN '{from_date}' AND '{to_date}'
+ORDER BY fr.date asc;
 """
 
 
