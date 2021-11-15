@@ -9,21 +9,20 @@
                 <field name="schedule_date"/>
                 <field name="equipment_id"/>
                 <field name="fleet_product_id"/>
-                <field name="url_trip_image" widget="url"/>
                 <field name="location_name" string="Tên điểm đi"/>
                 <field name="location_dest_name" string="Tên điểm đến"/>
                 <field name="location_start_district_state" string="Địa chỉ điểm đi"/>
                 <field name="location_dest_district_state" string="Địa chỉ điểm đến"/>
-                <button name="approve"
-                        confirm="Bạn có chắc chắn muốn phê duyệt hành trình này không?"
-                        groups="fleet_trip.group_fleet_manager"
+                <button name="do_approve"
+                        type="object"
                         attrs="{'invisible': [('is_approved','=',True)]}"
-                        type="object" class="fa fa-check-square"/>
-                <button name="reject"
-                        confirm="Bạn có chắc chắn muốn từ chối hành trình này không?"
-                        groups="fleet_trip.group_fleet_manager"
+                        class="fa fa-check-square"
+                        groups="fleet_trip.group_fleet_manager"/>
+                <button name="do_reject"
+                        type="object"
                         attrs="{'invisible': [('is_approved','=',True)]}"
-                        type="object" class="fa fa-window-close"/>
+                        class="fa fa-window-close"
+                        groups="fleet_trip.group_fleet_manager"/>
                 <field name="eating_fee"/>
                 <field name="law_money"/>
                 <field name="road_tiket_fee"/>

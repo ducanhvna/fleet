@@ -40,11 +40,9 @@
                 <tree string="Bảng chí phí vận tải" create="0">
                     <field name="schedule_date"/>
                     <field name="equipment_id"/>
-                    <field name="invoice_amount"/>
-                    <field name="bill_content"/>
-                    <field name="oil_amount"/>
-                    <field name="number_of_oil"/>
-                    <field name="machine_amount"/>
+                    <field name="source"/>
+                    <field name="amount"/>
+                    <field name="note"/>
                     <field name="create_uid" string="Người tạo"/>
                 </tree>
             </field>

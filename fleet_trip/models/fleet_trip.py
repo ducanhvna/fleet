@@ -81,7 +81,6 @@ class FleetTrip(models.Model):
     address_end = fields.Char(string="Địa chỉ đích")
     start_hour = fields.Datetime(string="Giờ xuất phát")
     end_hour = fields.Datetime(string="Giờ đến đích")
-    url_trip_image = fields.Char(string='Ảnh hành trình')
     is_approved = fields.Boolean(string="Đã xác nhận")
 
     @api.onchange("location_id")
@@ -231,11 +230,33 @@ class FleetTrip(models.Model):
             company_name = "NM" + self.location_dest_id
         self.company_name = company_name
 
-    def approve(self):
-        self.is_approved = True
+    def do_approve(self):
+        view_id = self.env.ref('fleet_trip.fleet_trip_approve_form_view').id
+        act_window = {
+            'type': 'ir.actions.act_window',
+            'name': (_("Confirmation")),
+            'res_model': 'fleet.trip.approve.reject',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'view_id': view_id,
+            'views': [(view_id, 'form')],
+            'target': 'new',
+            'context': {'default_fleet_trip_id': self.id}}
+        return act_window
 
-    def reject(self):
-        self.unlink()
+    def do_reject(self):
+        view_id = self.env.ref('fleet_trip.fleet_trip_reject_form_view').id
+        act_window = {
+            'type': 'ir.actions.act_window',
+            'name': (_("Confirmation")),
+            'res_model': 'fleet.trip.approve.reject',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'view_id': view_id,
+            'views': [(view_id, 'form')],
+            'target': 'new',
+            'context': {'default_fleet_trip_id': self.id}}
+        return act_window
 
 
 class StockDelvery(models.Model):
