@@ -4,20 +4,31 @@ from odoo.exceptions import ValidationError
 SQL_GENERATE_FLEET_TRIP_COST_REPORT = """
 DELETE FROM fleet_trip_cost_report WHERE id is not null;
 INSERT INTO fleet_trip_cost_report
-(schedule_date, equipment_id, invoice_amount, bill_content, oil_amount, number_of_oil, machine_amount, create_uid)
-SELECT ft.schedule_date   AS schedule_date,
-       ft.equipment_id    AS equipment_id,
-       fmr.invoice_amount AS invoice_amount,
-       fmr.bill_content   AS bill_content,
-       fmr.oil_amount     AS oil_amount,
-       fmr.number_of_oil  AS number_of_oil,
-       fmr.machine_amount AS machine_amount,
-       {create_uid}                  AS create_uid
-FROM fleet_trip ft
-         LEFT JOIN fleet_main_report fmr
-                   ON ft.equipment_id = fmr.equipment_id AND ft.schedule_date = fmr.date
-WHERE ft.schedule_date BETWEEN '{from_date}' AND '{to_date}'
-ORDER BY ft.schedule_date asc;
+(schedule_date, equipment_id, source, amount, note, create_uid)
+SELECT REPORT.schedule_date AS schedule_date,
+       REPORT.equipment_id  AS equipment_id,
+       REPORT.source        AS source,
+       REPORT.amount        AS amount,
+       REPORT.note          AS note,
+       REPORT.create_uid    AS create_uid
+FROM ((SELECT FMR.date           AS schedule_date,
+              FMR.equipment_id   AS equipment_id,
+              'invoice'          AS source,
+              FMR.invoice_amount AS amount,
+              FMR.bill_content   AS note,
+              FMR.create_uid     AS create_uid
+       FROM fleet_main_report FMR
+       WHERE FMR.date BETWEEN '{from_date}' AND '{to_date}')
+      UNION ALL
+      (SELECT FT.schedule_date   AS schedule_date,
+              FT.equipment_id    AS equipment_id,
+              'incurred_fee_2'   AS source,
+              FT.incurred_fee_2  AS amount,
+              FT.incurred_note_2 AS note,
+              FT.create_uid      AS create_uid
+       FROM fleet_trip FT
+       WHERE FT.schedule_date BETWEEN '{from_date}' AND '{to_date}')) AS REPORT
+ORDER BY REPORT.schedule_date, REPORT.equipment_id;
 """
 
 
@@ -57,8 +68,8 @@ class FleetTripCostReport(models.Model):
 
     schedule_date = fields.Date(string='Ngày')
     equipment_id = fields.Many2one('maintenance.equipment', string='Xe')
-    invoice_amount = fields.Float(string='Hóa đơn', digits=(16, 0))
-    bill_content = fields.Text(string="Nội dung hoá đơn")
-    oil_amount = fields.Float(string="Tiền dầu", digits=(16, 0))
-    number_of_oil = fields.Float(string="Số lít dầu", digits=(16, 2))
-    machine_amount = fields.Float(string="Dầu máy", digits=(16, 0))
+    source = fields.Selection(string="Nguồn",
+                              selection=[('invoice', 'Hóa đơn'), ('incurred_fee_2', 'Phát sinh 2')])
+    amount = fields.Float(string='Chi phí', digits=(16, 0))
+    note = fields.Text(string="Nội dung hoá đơn")
+

@@ -13,6 +13,7 @@
         'views/menu.xml',
         'views/fleet_info_view.xml',
         'views/fleet_product_view.xml',
+        'wizard/fleet_trip_approve_reject_view.xml',
         'views/fleet_trip_view.xml',
         # 'views/fleet_car_view.xml',
         'views/maintenance_equipment_view.xml',
