@@ -84,7 +84,7 @@ class FleetTrip(models.Model):
     is_approved = fields.Boolean(string="Đã xác nhận")
     
     @api.depends('location_id', 'location_dest_id', 'location_id.note', 'location_dest_id.note')
-    def _compute_address(self)
+    def _compute_address(self):
         for record in self:
             record.address_start = record.env['fleet.location'].search([('code', '=', record.location_id)], limit=1).note or ''
             record.address_end = record.env['fleet.location'].search([('code', '=', record.location_dest_id)], limit=1).note or ''
