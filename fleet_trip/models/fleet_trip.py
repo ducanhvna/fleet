@@ -77,11 +77,17 @@ class FleetTrip(models.Model):
     country_id = fields.Many2one('res.country', default=241, string='Quốc gia', ondelete='restrict')
     company_name = fields.Char(string='Công ty')
     fleet_product_id = fields.Many2one('fleet.product', string='Mặt hàng', ondelete='restrict')
-    address_start = fields.Char(string="Địa chỉ xuất phát")
-    address_end = fields.Char(string="Địa chỉ đích")
+    address_start = fields.Char(string="Địa chỉ xuất phát", compute='_compute_address', compute_sudo=True, store=True)
+    address_end = fields.Char(string="Địa chỉ đích", compute='_compute_address', compute_sudo=True, store=True)
     start_hour = fields.Datetime(string="Giờ xuất phát")
     end_hour = fields.Datetime(string="Giờ đến đích")
     is_approved = fields.Boolean(string="Đã xác nhận")
+    
+    @api.depends('location_id', 'location_dest_id', 'location_id.note', 'location_dest_id.note')
+    def _compute_address(self)
+        for record in self:
+            record.address_start = record.env['fleet.location'].search([('code', '=', record.location_id)], limit=1).note or ''
+            record.address_end = record.env['fleet.location'].search([('code', '=', record.location_dest_id)], limit=1).note or ''
 
     @api.onchange("location_id")
     def onchange_location_id(self):
