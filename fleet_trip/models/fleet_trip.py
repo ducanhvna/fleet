@@ -88,7 +88,7 @@ class FleetTrip(models.Model):
         location_obj = self.env['fleet.location']
         for record in self:
             record.address_start = location_obj.search([("code", "=", self.location_id)], limit=1).note
-            record.address_end = location_obj.search([("code", "=", self.district_dest_id)], limit=1).note
+            record.address_end = location_obj.search([("code", "=", self.location_dest_id)], limit=1).note
 
     @api.onchange("location_id")
     def onchange_location_id(self):
