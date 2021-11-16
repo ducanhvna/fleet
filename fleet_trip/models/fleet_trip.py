@@ -148,12 +148,10 @@ class FleetTrip(models.Model):
             rec.fee_total = rec.eating_fee + rec.law_money + rec.road_tiket_fee + rec.incurred_fee + rec.incurred_fee_2
 
     def do_start_trip(self):
-        self._check_odometer_start_odometer_dest()
         self.start_date = fields.Datetime.now()
         self.state = '2_confirm'
 
     def do_end_trip(self):
-        self._check_odometer_start_odometer_dest()
         self.end_date = fields.Datetime.now()
         self.state = '3_done'
 
@@ -208,18 +206,6 @@ class FleetTrip(models.Model):
             if record.state_dest_id:
                 location_name.append(record.state_dest_id.name or '')
             record.location_dest_district_state = ','.join(location_name)
-
-    def _check_odometer_start_odometer_dest(self):
-        for record in self:
-            if record.odometer_start >= record.odometer_dest:
-                raise ValidationError(_('Số CTM điểm đích phải lớn hơn Số CTM xuất phát.'))
-            if record.schedule_date:
-                yesterday = fields.Date.from_string(record.schedule_date) + relativedelta(days=-1)
-                domain = [('equipment_id', '=', record.equipment_id.id),
-                          ('schedule_date', '=', yesterday)]
-                fleet_strip_yesterday = record.search(domain, limit=1)
-                if fleet_strip_yesterday and fleet_strip_yesterday.odometer_dest > record.odometer_start:
-                    raise ValidationError(_('Số CTM xuất phát phải lớn hơn hoặc bằng Số CTM điểm đích hôm trước.'))
 
     @api.onchange('location_id', 'location_dest_id')
     def onchange_location(self):
