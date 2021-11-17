@@ -71,8 +71,11 @@
                                 <field name="state_id" class="o_address_state" placeholder="Tỉnh/TP"/>
                                 <field name="district_id" placeholder="Quận/Huyện" class="o_address_zip"/>
                                 <field name="ward_id" placeholder="Xã/Phường" class="o_address_city"/>
-                                <field name="address_start" placeholder="Địa chỉ"/>
                             </div>
+                            <field name="address_start"
+                                   placeholder="Địa chỉ"
+                                   attrs="{'readonly': [('location_id','!=',False)]}"
+                                   force_save="1"/>
                             <field name="odometer_start"/>
                             <field name="start_date"/>
                         </group>
@@ -86,8 +89,11 @@
                                 <field name="state_dest_id" class="o_address_state" placeholder="Tỉnh/TP"/>
                                 <field name="district_dest_id" placeholder="Quận/Huyện" class="o_address_zip"/>
                                 <field name="ward_dest_id" placeholder="Xã/Phường" class="o_address_city"/>
-                                <field name="address_end" placeholder="Địa chỉ"/>
                             </div>
+                            <field name="address_end"
+                                   placeholder="Địa chỉ"
+                                   attrs="{'readonly': [('location_dest_id','!=',False)]}"
+                                   force_save="1"/>
                             <field name="odometer_dest"/>
                             <field name="odometer_end"/>
                             <field name="end_date"/>

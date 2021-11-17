@@ -77,18 +77,12 @@ class FleetTrip(models.Model):
     country_id = fields.Many2one('res.country', default=241, string='Quốc gia', ondelete='restrict')
     company_name = fields.Char(string='Công ty')
     fleet_product_id = fields.Many2one('fleet.product', string='Mặt hàng', ondelete='restrict')
-    address_start = fields.Char(string="Địa chỉ xuất phát", compute='_compute_address', compute_sudo=True, store=True)
-    address_end = fields.Char(string="Địa chỉ đích", compute='_compute_address', compute_sudo=True, store=True)
+    address_start = fields.Char(string="Địa chỉ xuất phát")
+    address_end = fields.Char(string="Địa chỉ đích")
     start_hour = fields.Datetime(string="Giờ xuất phát")
     end_hour = fields.Datetime(string="Giờ đến đích")
     is_approved = fields.Boolean(string="Đã xác nhận")
-    
-    @api.depends("location_id", "location_dest_id")
-    def _compute_address(self):
-        location_obj = self.env['fleet.location']
-        for record in self:
-            record.address_start = location_obj.search([("code", "=", self.location_id)], limit=1).note
-            record.address_end = location_obj.search([("code", "=", self.location_dest_id)], limit=1).note
+
 
     @api.onchange("location_id")
     def onchange_location_id(self):
@@ -100,6 +94,7 @@ class FleetTrip(models.Model):
                 self.district_id = location_id.district_id.id
                 self.ward_id = location_id.ward_id.id
                 self.state_id = location_id.state_id.id
+                self.address_start = location_id.note
 
     @api.onchange("location_dest_id")
     def onchange_location_dest_id(self):
@@ -111,6 +106,7 @@ class FleetTrip(models.Model):
                 self.district_dest_id = location_dest_id.district_id.id
                 self.ward_dest_id = location_dest_id.ward_id.id
                 self.state_dest_id = location_dest_id.state_id.id
+                self.address_end = location_dest_id.note
 
     @api.depends("district_id", "ward_id", "state_id")
     def _compute_location_compute_name(self):
