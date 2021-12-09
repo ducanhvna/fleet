@@ -172,7 +172,6 @@ class FleetTrip(models.Model):
                 'url': attachment,
                 'res_model': 'fleet.trip',
                 'res_id': self.id,
-                'mimetype': "image/png"
             })
 
     def do_odometer_end(self, odometer_end, attachments=[]):

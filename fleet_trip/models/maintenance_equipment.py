@@ -75,7 +75,6 @@ class MaintenanceEquipment(models.Model):
                 'url': attachment,
                 'res_model': 'maintenance.request',
                 'res_id': maintenance_request.id,
-                'mimetype': "image/png"
             })
         return maintenance_request
 
