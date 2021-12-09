@@ -52,6 +52,12 @@ OUT_FLEET_TRIP_schema = (
     "law_money",
     "road_tiket_fee",
     "fee_total",
+    "odometer_start",
+    "odometer_dest",
+    ("attachment_ids", [(
+        "url",
+        "datas"
+    )]),
 )
 
 OUT_model_res_user_read_one_SCHEMA = (
@@ -92,7 +98,7 @@ OUT_model_res_user_read_one_SCHEMA = (
             "phone",
             "mobile",
         ),
-    ),
+         ),
         ("message_ids", [(
             "date",
             "body",
@@ -102,7 +108,7 @@ OUT_model_res_user_read_one_SCHEMA = (
             )),
         )]),
     ),
-))
+     ))
 
 OUT_maintenance_equipment_schema = (
     "id",
@@ -113,13 +119,13 @@ OUT_maintenance_equipment_schema = (
     "trip_count",
     "note",
     ("message_ids", [(
-            "date",
-            "body",
-            ("author_id", (
-                "id",
-                "name"
-            )),
-        )]),
+        "date",
+        "body",
+        ("author_id", (
+            "id",
+            "name"
+        )),
+    )]),
 )
 
 OUT_maintenance_request_schema = (
@@ -154,8 +160,12 @@ OUT_maintenance_request_schema = (
     )),
     "date_process",
     "schedule_date",
+    "odometer_maintenance",
+    ("attachment_ids", [(
+        "url",
+        "datas"
+    )]),
 )
-
 
 OUT_model_res_user_create_one_SCHEMA = (
     "id",
@@ -375,9 +385,13 @@ class ControllerREST(http.Controller):
     @http.route('/api/fleet.trip', methods=['POST'], type='http', auth='none', cors=rest_cors_value, csrf=False)
     @check_permissions
     def api_model_fleet_trip_POST(self, **kw):
-        uid = request.session.uid
-        employee_id = request.env['hr.employee'].sudo().search([('user_id', '=', uid)])
-        employee_id = employee_id.id if employee_id else False
+        employee_id = False
+        if request.httprequest.data:
+            employee_id = json.loads(request.httprequest.data).get('employee_id')
+        if not employee_id:
+            uid = request.session.uid
+            employee_id = request.env['hr.employee'].sudo().search([('user_id', '=', uid)])
+            employee_id = employee_id.id if employee_id else False
         return wrap_resource_create_one(
             modelname='fleet.trip',
             default_vals={'country_id': 241, 'employee_id': employee_id},
@@ -385,4 +399,12 @@ class ControllerREST(http.Controller):
             OUT_fields=OUT_FLEET_TRIP_schema
         )
 
-
+    @http.route('/api/fleet.trip/<id>', methods=['GET'], type='http', auth='none', cors=rest_cors_value)
+    @check_permissions
+    def api_model_fleet_trip_id_GET(self, id, **kw):
+        return wrap_resource_read_one(
+            modelname='fleet.trip',
+            id=id,
+            success_code=OUT_SUCCESS_CODE,
+            OUT_fields=OUT_FLEET_TRIP_schema
+        )

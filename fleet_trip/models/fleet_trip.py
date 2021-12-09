@@ -82,6 +82,9 @@ class FleetTrip(models.Model):
     start_hour = fields.Datetime(string="Giờ xuất phát")
     end_hour = fields.Datetime(string="Giờ đến đích")
     is_approved = fields.Boolean(string="Đã xác nhận")
+    attachment_ids = fields.One2many('ir.attachment', 'res_id',
+                                     domain=[('res_model', '=', 'fleet.trip')],
+                                     string='Attachments')
 
 
     @api.onchange("location_id")
