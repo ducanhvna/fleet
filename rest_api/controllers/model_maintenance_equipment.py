@@ -56,7 +56,6 @@ OUT_FLEET_TRIP_schema = (
     "odometer_dest",
     ("attachment_ids", [(
         "url",
-        "datas"
     )]),
 )
 
@@ -163,7 +162,6 @@ OUT_maintenance_request_schema = (
     "odometer_maintenance",
     ("attachment_ids", [(
         "url",
-        "datas"
     )]),
 )
 
