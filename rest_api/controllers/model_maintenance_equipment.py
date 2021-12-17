@@ -171,6 +171,11 @@ OUT_model_res_user_create_one_SCHEMA = (
     "login",
 )
 
+OUT_fleet_product_schema = (
+    "id",
+    "name",
+)
+
 
 class ControllerREST(http.Controller):
 
@@ -406,3 +411,20 @@ class ControllerREST(http.Controller):
             success_code=OUT_SUCCESS_CODE,
             OUT_fields=OUT_FLEET_TRIP_schema
         )
+
+    @http.route('/api/fleet.product', methods=['GET'], type='http', auth='none', cors=rest_cors_value)
+    @check_permissions
+    def api_fleet_product_GET(self, **kw):
+        domain = []
+        for key, val in request.httprequest.args.items():
+            try:
+                val = literal_eval(val)
+            except:
+                pass
+            domain += [(key, '=', val)]
+        return wrap_resource_read_all(
+            modelname='fleet.product',
+            default_domain=domain or [],
+            success_code=OUT_SUCCESS_CODE,
+            OUT_fields=OUT_fleet_product_schema,
+            search_more=True)
