@@ -86,7 +86,6 @@ class FleetTrip(models.Model):
                                      domain=[('res_model', '=', 'fleet.trip')],
                                      string='Attachments')
 
-
     @api.onchange("location_id")
     def onchange_location_id(self):
         location_obj = self.env['fleet.location']
@@ -121,7 +120,7 @@ class FleetTrip(models.Model):
                 location_name.append(record.district_id.name or '')
             if record.state_id:
                 location_name.append(record.state_id.name or '')
-            record.location_compute_name = ','.join(location_name)
+            record.location_compute_name = ', '.join(location_name)
 
     @api.depends("district_dest_id", "ward_dest_id", "state_dest_id")
     def _compute_location_dest_compute_name(self):
@@ -133,7 +132,7 @@ class FleetTrip(models.Model):
                 location_name.append(record.district_dest_id.name or '')
             if record.state_dest_id:
                 location_name.append(record.state_dest_id.name or '')
-            record.location_dest_compute_name = ','.join(location_name)
+            record.location_dest_compute_name = ', '.join(location_name)
 
     @api.onchange("equipment_id")
     def _onchange_equipment_id(self):
