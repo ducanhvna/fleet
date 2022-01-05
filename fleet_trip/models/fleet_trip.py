@@ -200,7 +200,7 @@ class FleetTrip(models.Model):
                 location_name.append(record.district_id.name or '')
             if record.state_id:
                 location_name.append(record.state_id.name or '')
-            record.location_start_district_state = ','.join(location_name)
+            record.location_start_district_state = ', '.join(location_name)
 
     @api.depends("district_dest_id", "state_dest_id")
     def _compute_location_dest_district_state(self):
@@ -210,7 +210,7 @@ class FleetTrip(models.Model):
                 location_name.append(record.district_dest_id.name or '')
             if record.state_dest_id:
                 location_name.append(record.state_dest_id.name or '')
-            record.location_dest_district_state = ','.join(location_name)
+            record.location_dest_district_state = ', '.join(location_name)
 
     @api.onchange('location_id', 'location_dest_id')
     def onchange_location(self):
