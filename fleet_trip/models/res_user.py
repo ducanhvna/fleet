@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
-from datetime import datetime, timedelta, date
+from datetime import datetime, date
+
 try:
     from odoo.addons.rest_api.controllers.main import generate_token, token_store
 except:
@@ -79,7 +80,7 @@ class HrEmployee(models.Model):
             today = date.today()
             trip_ids = rec.trip_ids.filtered(lambda x: x.schedule_date)
             rec.trip_count = len(trip_ids.filtered(lambda x: x.schedule_date == today))
-            rec.trip_done_count = len(trip_ids.filtered(lambda x: x.schedule_date == today and x.state =='3_done'))
+            rec.trip_done_count = len(trip_ids.filtered(lambda x: x.schedule_date == today and x.state == '3_done'))
 
 
 class HrEmployeePayroll(models.Model):
