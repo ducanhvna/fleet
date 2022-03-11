@@ -28,8 +28,6 @@ class FleetMainReport(models.Model):
     invoice_amount = fields.Float(string='Phát sinh/Hóa đơn', default=0, digits=(16, 0))
     oil_amount = fields.Float(string="Tiền dầu", default=0, digits=(16, 0))
     machine_amount = fields.Float(string="Dầu máy", default=0, digits=(16, 0))
-    number_of_oil = fields.Float(string="Số lít dầu", default=0, digits=(16, 2))
-    bill_content = fields.Text(string="Nội dung hoá đơn")
 
     day_time = fields.Char(string="Ngày", compute='_compute_date_time', store=True)
     month_time = fields.Char(string="Tháng", compute='_compute_date_time', store=True)
@@ -76,9 +74,6 @@ class AdvanceMoneyReport(models.Model):
     employee_id = fields.Many2one('hr.employee', string='Người ứng')
     equipment_id = fields.Many2one('maintenance.equipment', string='Xe')
     total_amount = fields.Float(string='Tiền ứng', required=True, default=0, digits=(16, 0))
-    total_amount_spent = fields.Float(string='Tiền đã chi', default=0, digits=(16, 0))
-    total_amount_remaining = fields.Float(string='Tiền còn lại', default=0, digits=(16, 0),
-                                          compute='_compute_total_amount_remaining', store=True)
 
     day_time = fields.Char(string="Ngày", compute='_compute_date_time', store=True)
     month_time = fields.Char(string="Tháng", compute='_compute_date_time', store=True)
@@ -91,12 +86,6 @@ class AdvanceMoneyReport(models.Model):
                 rec.day_time = str(rec.date.day)
                 rec.month_time = str(rec.date.month)
                 rec.year_time = str(rec.date.year)
-
-    @api.depends("total_amount", "total_amount_spent")
-    def _compute_total_amount_remaining(self):
-        for record in self:
-            total_amount_remaining = record.total_amount - record.total_amount_spent
-            record.total_amount_remaining = total_amount_remaining if total_amount_remaining >= 0 else 0
 
 
 class SalaryMoneyReport(models.Model):

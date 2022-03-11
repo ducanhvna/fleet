@@ -12,8 +12,6 @@
                 <field name="invoice_amount"/>
                 <field name="oil_amount"/>
                 <field name="machine_amount"/>
-                <field name="number_of_oil"/>
-                <field name="bill_content"/>
                 <field name="create_uid" string="Người tạo"/>
             </tree>
         </field>
@@ -37,8 +35,6 @@
                             <field name="invoice_amount"/>
                             <field name="oil_amount"/>
                             <field name="machine_amount"/>
-                            <field name="number_of_oil"/>
-                            <field name="bill_content"/>
                         </group>
                     </group>
                 </sheet>
@@ -153,8 +149,6 @@
                 <field name="equipment_id"/>
                 <field name="employee_id"/>
                 <field name="total_amount"/>
-                <field name="total_amount_spent"/>
-                <field name="total_amount_remaining"/>
                 <field name="create_uid" string="Người tạo"/>
             </tree>
         </field>
@@ -176,8 +170,6 @@
                         <group>
                             <field name="employee_id"/>
                             <field name="total_amount"/>
-                            <field name="total_amount_spent"/>
-                            <field name="total_amount_remaining"/>
                             <field name="create_uid" string="Người tạo"/>
                         </group>
                     </group>

@@ -27,7 +27,7 @@ class MaintenanceEquipment(models.Model):
     def _compute_trip_count(self):
         for rec in self:
             today = datetime.date.today()
-            rec.trip_count = len(rec.trip_ids.filtered(lambda x: x.schedule_date == today))
+            rec. trip_count = len(rec.trip_ids.filtered(lambda x: x.schedule_date == today))
 
     @api.depends('maintenance_ids', 'maintenance_ids.date_process')
     def _get_last_request(self):
@@ -57,13 +57,12 @@ class MaintenanceEquipment(models.Model):
             base64_encoded_result_str = base64_encoded_result_bytes.decode('ascii')
             return base64_encoded_result_str
 
-    def create_maintenance_request(self, note, odometer_maintenance, attachments=[]):
+    def create_maintenance_request(self, note, attachments=[]):
 
         vals = {
             'equipment_id': self.id,
             'name': f'Yêu cầu sửa chữa xe {self.name} - {self.license_plate}',
             'description': note,
-            'odometer_maintenance': odometer_maintenance,
         }
         maintenance_request = self.env['maintenance.request'].create(vals)
         if not attachments:
@@ -83,7 +82,3 @@ class MaintenanceRequest(models.Model):
     _inherit = "maintenance.request"
 
     date_process = fields.Date(string='Ngày thực hiện')
-    odometer_maintenance = fields.Float(string="Số KM bảo trì")
-    attachment_ids = fields.One2many('ir.attachment', 'res_id',
-                                     domain=[('res_model', '=', 'maintenance.request')],
-                                     string='Attachments')
