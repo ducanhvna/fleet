@@ -13,7 +13,7 @@ class MaintenanceEquipment(models.Model):
 
     def name_get(self):
         self.browse(self.ids).read(['name', 'license_plate'])
-        return [(car.id, '%s%s' % (car.license_plate and '[%s] ' % car.license_plate or '', car.name))
+        return [(car.id, '%s' % (car.name))
                 for car in self]
 
     qr_code = fields.Char(string="Mã QR", copy=False, compute='_get_qr_code')

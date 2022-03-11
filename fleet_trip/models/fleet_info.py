@@ -31,14 +31,13 @@ class FleetLocation(models.Model):
     state_id = fields.Many2one("res.country.state", string='Tỉnh', ondelete='restrict',
                                domain="[('country_id', '=', country_id)]")
     country_id = fields.Many2one('res.country', default=241, string='Quốc gia', ondelete='restrict')
-    
+
     @api.model
     def create(self, vals_list):
         num_location = len(self.env['fleet.location'].search([]))
         if num_location > 3:
             raise ValidationError('Chỉ có thể tạo tối đa 3 địa điểm!')
         return super(FleetLocation, self).create(vals_list)
-
 
 
 # class FleetCar(models.Model):
@@ -67,3 +66,9 @@ class ProductTemplate(models.Model):
 
     section = fields.Char(string='Tiết diện')
     product_length = fields.Integer(string='Dài')
+
+
+class FleetProduct(models.Model):
+    _name = 'fleet.product'
+    _description = 'Mặt hàng'
+    _order = 'name'

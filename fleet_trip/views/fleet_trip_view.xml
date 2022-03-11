@@ -9,9 +9,8 @@
                 <field name="schedule_date"/>
 <!--                <field name="location_id"/>-->
 <!--                <field name="location_dest_id"/>-->
-
-                <field name="location_name"/>
-                <field name="location_dest_name"/>
+                <field name="location_id"/>
+                <field name="location_dest_id"/>
                 <field name="equipment_id"/>
                 <field name="eating_fee"/>
                 <field name="law_money"/>
@@ -50,9 +49,9 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="equipment_id"/>
-                            <field name="location_name"/>
-                            <field name="location_id" widget="radio" string="Chọn điểm đầu"/>
+                            <field name="equipment_id" options="{'limit': 5, 'create': false, 'create_edit': false}"/>
+                            <field name="location_id"/>
+<!--                            <field name="location_id" widget="radio" string="Chọn điểm đầu"/>-->
                             <label for="ward_id" string="Nơi xuất phát"/>
                             <div class="o_address_format">
                                 <field name="state_id" class="o_address_state" placeholder="Tỉnh/TP"/>
@@ -66,8 +65,8 @@
                         <group>
                             <field name="employee_id"/>
 
-                            <field name="location_dest_name"/>
-                            <field name="location_dest_id" widget="radio" string="Chọn điểm cuối"/>
+                            <field name="location_dest_id"/>
+<!--                            <field name="location_dest_id" widget="radio" string="Chọn điểm cuối"/>-->
                             <label for="ward_dest_id" string="Nơi đến"/>
                             <div class="o_address_format">
                                 <field name="state_dest_id" class="o_address_state" placeholder="Tỉnh/TP"/>
