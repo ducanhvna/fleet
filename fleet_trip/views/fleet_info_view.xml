@@ -98,7 +98,7 @@
         <field name="name">fleet.location.tree.view</field>
         <field name="model">fleet.location</field>
         <field name="arch" type="xml">
-            <tree>
+            <tree create="1" edit="1" delete="1">
                 <field name="name"/>
                 <field name="ward_id"/>
                 <field name="district_id"/>
