@@ -33,12 +33,12 @@ class FleetLocation(models.Model):
     country_id = fields.Many2one('res.country', default=241, string='Quốc gia', ondelete='restrict')
     note = fields.Text(string="Ghi chú")
     
-    # @api.model
-    # def create(self, vals_list):
-    #     num_location = len(self.env['fleet.location'].search([]))
-    #     if num_location > 3:
-    #         raise ValidationError('Chỉ có thể tạo tối đa 3 địa điểm!')
-    #     return super(FleetLocation, self).create(vals_list)
+    @api.model
+    def create(self, vals_list):
+        num_location = len(self.env['fleet.location'].search([]))
+        if num_location > 3:
+            raise ValidationError('Chỉ có thể tạo tối đa 3 địa điểm!')
+        return super(FleetLocation, self).create(vals_list)
 
 
 

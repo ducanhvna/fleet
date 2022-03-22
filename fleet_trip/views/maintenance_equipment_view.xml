@@ -48,6 +48,7 @@
         <field name="inherit_id" ref="maintenance.hr_equipment_request_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='maintenance_type']" position="after">
+                <field name="odometer_maintenance"/>
                 <field name="date_process"/>
             </xpath>
         </field>

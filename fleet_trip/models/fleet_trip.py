@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 import base64
@@ -8,25 +9,24 @@ import requests
 class FleetTrip(models.Model):
     _name = 'fleet.trip'
     _rec_name = 'equipment_id'
+    _order = 'schedule_date asc'
     _description = 'Hành trình vận tải'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
-    # def _get_location_selection(self):
-    #     selection = []
-    #     list_location = self.env['fleet.location'].search([])
-    #     for location in list_location:
-    #         selection += [(location.code, location.name)]
-    #     return selection
+    def _get_location_selection(self):
+        selection = []
+        list_location = self.env['fleet.location'].search([])
+        for location in list_location:
+            selection += [(location.code, location.name)]
+        return selection
 
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
     equipment_id = fields.Many2one('maintenance.equipment', string='Xe')
     location_name = fields.Char(string='Tên điểm đầu')
     location_dest_name = fields.Char(string='Tên điểm đích')
-    # location_id = fields.Selection(selection=_get_location_selection)
-    # location_dest_id = fields.Selection(selection=_get_location_selection)
-    location_id = fields.Many2one('fleet.location')
-    location_dest_id = fields.Many2one('fleet.location')
+    location_id = fields.Selection(selection=_get_location_selection)
+    location_dest_id = fields.Selection(selection=_get_location_selection)
     eating_fee = fields.Monetary('Tiền ăn')
     law_money = fields.Monetary('Tiền luật')
     road_tiket_fee = fields.Monetary('Vé cầu đường')
@@ -34,11 +34,11 @@ class FleetTrip(models.Model):
     incurred_note = fields.Char('Ghi chú phát sinh')
     incurred_fee_2 = fields.Monetary('Phát sinh 2')
     incurred_note_2 = fields.Char('Ghi chú phát sinh 2')
-    note = fields.Text('Ghi chú sửa chữa')
+    note = fields.Text('Ghi chú hành trình')
     fee_total = fields.Monetary('Tổng cộng', compute='_compute_fee_total')
     odometer_start = fields.Integer('Số CTM xuất phát')
     odometer_dest = fields.Integer('Số CTM điểm đích')
-    odometer_end = fields.Integer('Số CTM quay về')
+    odometer_end = fields.Integer('Số KM hành trình', compute='_compute_odometer_end', store=True)
     employee_id = fields.Many2one('hr.employee', string='Nhân viên')
     state = fields.Selection([
         ('1_draft', 'Đang Chờ'),
@@ -58,59 +58,81 @@ class FleetTrip(models.Model):
     state_id = fields.Many2one("res.country.state", string='Tỉnh', ondelete='restrict',
                                domain="[('country_id', '=', country_id)]")
 
-    location_compute_name = fields.Char(string='Nơi xuất phát', compute='_compute_location_compute_name')
-    location_dest_compute_name = fields.Char(string='Nơi đến', compute='_compute_location_dest_compute_name')
+    location_start_district_state = fields.Char(string='Địa chỉ điểm đi',
+                                                compute='_compute_location_start_district_state')
+    location_dest_district_state = fields.Char(string='Địa chỉ điểm đến',
+                                               compute='_compute_location_dest_district_state')
 
-    district_dest_id = fields.Many2one('res.country.district', string='Huyện', domain="[('state_id', '=', state_dest_id)]")
+    location_compute_name = fields.Char(string='Nơi xuất phát',
+                                        compute='_compute_location_compute_name')
+    location_dest_compute_name = fields.Char(string='Nơi đến',
+                                             compute='_compute_location_dest_compute_name')
+
+    district_dest_id = fields.Many2one('res.country.district', string='Huyện',
+                                       domain="[('state_id', '=', state_dest_id)]")
     ward_dest_id = fields.Many2one('res.country.ward', string='Xã', domain="[('district_id', '=', district_dest_id)]")
     state_dest_id = fields.Many2one("res.country.state", string='Tỉnh', ondelete='restrict',
-                               domain="[('country_id', '=', country_id)]")
+                                    domain="[('country_id', '=', country_id)]")
 
     country_id = fields.Many2one('res.country', default=241, string='Quốc gia', ondelete='restrict')
     company_name = fields.Char(string='Công ty')
     fleet_product_id = fields.Many2one('fleet.product', string='Mặt hàng', ondelete='restrict')
+    address_start = fields.Char(string="Địa chỉ xuất phát")
+    address_end = fields.Char(string="Địa chỉ đích")
+    start_hour = fields.Datetime(string="Giờ xuất phát")
+    end_hour = fields.Datetime(string="Giờ đến đích")
+    is_approved = fields.Boolean(string="Đã xác nhận")
+    attachment_ids = fields.One2many('ir.attachment', 'res_id',
+                                     domain=[('res_model', '=', 'fleet.trip')],
+                                     string='Attachments')
 
     @api.onchange("location_id")
     def onchange_location_id(self):
+        location_obj = self.env['fleet.location']
         if self.location_id:
-            self.location_name = self.location_id.name
-            self.district_id = self.location_id.district_id.id
-            self.ward_id = self.location_id.ward_id.id
-            self.state_id = self.location_id.state_id.id
-            self.address_start = self.location_id.note
+            location_id = location_obj.search([("code", "=", self.location_id)], limit=1)
+            if location_id:
+                self.location_name = location_id.name
+                self.district_id = location_id.district_id.id
+                self.ward_id = location_id.ward_id.id
+                self.state_id = location_id.state_id.id
+                self.address_start = location_id.note
 
     @api.onchange("location_dest_id")
     def onchange_location_dest_id(self):
+        location_obj = self.env['fleet.location']
         if self.location_dest_id:
-            self.location_dest_name = self.location_dest_id.name
-            self.district_dest_id = self.location_dest_id.district_id.id
-            self.ward_dest_id = self.location_dest_id.ward_id.id
-            self.state_dest_id = self.location_dest_id.state_id.id
-            self.address_end = self.location_dest_id.note
+            location_dest_id = location_obj.search([("code", "=", self.location_dest_id)], limit=1)
+            if location_dest_id:
+                self.location_dest_name = location_dest_id.name
+                self.district_dest_id = location_dest_id.district_id.id
+                self.ward_dest_id = location_dest_id.ward_id.id
+                self.state_dest_id = location_dest_id.state_id.id
+                self.address_end = location_dest_id.note
 
     @api.depends("district_id", "ward_id", "state_id")
     def _compute_location_compute_name(self):
-        for rec in self:
-            location_compute_name = ''
-            if rec.ward_id:
-                location_compute_name += rec.ward_id.name
-            if rec.district_id:
-                location_compute_name += (', ' if location_compute_name else '') + rec.district_id.name
-            if rec.state_id:
-                location_compute_name += (', ' if location_compute_name else '') + rec.state_id.name
-            rec.location_compute_name = location_compute_name
+        for record in self:
+            location_name = []
+            if record.ward_id:
+                location_name.append(record.ward_id.name or '')
+            if record.district_id:
+                location_name.append(record.district_id.name or '')
+            if record.state_id:
+                location_name.append(record.state_id.name or '')
+            record.location_compute_name = ', '.join(location_name)
 
     @api.depends("district_dest_id", "ward_dest_id", "state_dest_id")
     def _compute_location_dest_compute_name(self):
-        for rec in self:
-            location_dest_compute_name = ''
-            if rec.ward_dest_id:
-                location_dest_compute_name += rec.ward_dest_id.name
-            if rec.district_dest_id:
-                location_dest_compute_name += (', ' if location_dest_compute_name else '') + rec.district_dest_id.name
-            if rec.state_dest_id:
-                location_dest_compute_name += (', ' if location_dest_compute_name else '') + rec.state_dest_id.name
-            rec.location_dest_compute_name = location_dest_compute_name
+        for record in self:
+            location_name = []
+            if record.ward_dest_id:
+                location_name.append(record.ward_dest_id.name or '')
+            if record.district_dest_id:
+                location_name.append(record.district_dest_id.name or '')
+            if record.state_dest_id:
+                location_name.append(record.state_dest_id.name or '')
+            record.location_dest_compute_name = ', '.join(location_name)
 
     @api.onchange("equipment_id")
     def _onchange_equipment_id(self):
@@ -190,14 +212,14 @@ class FleetTrip(models.Model):
                 location_name.append(record.state_dest_id.name or '')
             record.location_dest_district_state = ', '.join(location_name)
 
-    # @api.onchange('location_id', 'location_dest_id')
-    # def onchange_location(self):
-    #     company_name = ''
-    #     if self.location_id:
-    #         company_name = "NM" + self.location_id
-    #     elif self.location_dest_id:
-    #         company_name = "NM" + self.location_dest_id
-    #     self.company_name = company_name
+    @api.onchange('location_id', 'location_dest_id')
+    def onchange_location(self):
+        company_name = ''
+        if self.location_id:
+            company_name = "NM" + self.location_id
+        elif self.location_dest_id:
+            company_name = "NM" + self.location_dest_id
+        self.company_name = company_name
 
     def do_approve(self):
         view_id = self.env.ref('fleet_trip.fleet_trip_approve_form_view').id
@@ -260,4 +282,3 @@ class StockDelveryLine(models.Model):
     out_qty = fields.Float(string='SL Xuất')
     bao_qty = fields.Float(string='Bao')
     note = fields.Text(string='Ghi chú')
-

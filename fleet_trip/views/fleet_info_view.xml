@@ -69,25 +69,25 @@
                 <field name="contract_date"/>
             </xpath>
             <xpath expr="//page[last()]" position="after">
-                 <page string="Thông tin thu nhập" name="payroll_ids">
-                     <field name="payroll_ids" nolabel="1">
-                         <tree create="0" edit="0" delete="0">
-                             <field name="month"/>
-                             <field name="year"/>
-                             <field name="name"/>
-                             <field name="employee_id"/>
-                             <field name="payroll_amount"/>
-                             <field name="bonus_amount"/>
-                             <field name="total_amount"/>
-                         </tree>
-                     </field>
-                 </page>
+                <page string="Thông tin thu nhập" name="payroll_ids">
+                    <field name="payroll_ids" nolabel="1">
+                        <tree create="0" edit="0" delete="0">
+                            <field name="month"/>
+                            <field name="year"/>
+                            <field name="name"/>
+                            <field name="employee_id"/>
+                            <field name="payroll_amount"/>
+                            <field name="bonus_amount"/>
+                            <field name="total_amount"/>
+                        </tree>
+                    </field>
+                </page>
             </xpath>
             <xpath expr="//field[@name='coach_id']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
-             <xpath expr="//field[@name='parent_id']" position="after">
-<!--                 <field name="equipment_id"/>-->
+            <xpath expr="//field[@name='parent_id']" position="after">
+                <!--                 <field name="equipment_id"/>-->
                 <field name="other_info"/>
             </xpath>
         </field>
@@ -98,11 +98,12 @@
         <field name="name">fleet.location.tree.view</field>
         <field name="model">fleet.location</field>
         <field name="arch" type="xml">
-            <tree create="1" edit="1" delete="1">
+            <tree>
                 <field name="name"/>
                 <field name="ward_id"/>
                 <field name="district_id"/>
                 <field name="state_id"/>
+                <field name="note"/>
                 <field name="country_id" invisible="1"/>
             </tree>
         </field>
@@ -120,10 +121,12 @@
                         <group>
                             <field name="name"/>
                             <field name="state_id"/>
+                            <field name="district_id"/>
+                            <separator/>
+                            <field name="ward_id"/>
+                            <field name="note"/>
                         </group>
                         <group>
-                            <field name="district_id"/>
-                            <field name="ward_id"/>
                             <field name="country_id" invisible="1"/>
                         </group>
                     </group>
@@ -182,7 +185,7 @@
         <field name="res_model">hr.employee.payroll</field>
         <field name="type">ir.actions.act_window</field>
         <field name="view_mode">tree</field>
-<!--        <field name="context">{'search_default_group_by_month':True}</field>-->
+        <!--        <field name="context">{'search_default_group_by_month':True}</field>-->
     </record>
 
     <menuitem id="hr_employee_payroll_menu"
