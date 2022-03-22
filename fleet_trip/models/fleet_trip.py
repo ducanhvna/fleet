@@ -11,22 +11,20 @@ class FleetTrip(models.Model):
     _description = 'Hành trình vận tải'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
-    # def _get_location_selection(self):
-    #     selection = []
-    #     list_location = self.env['fleet.location'].search([])
-    #     for location in list_location:
-    #         selection += [(location.code, location.name)]
-    #     return selection
+    def _get_location_selection(self):
+        selection = []
+        list_location = self.env['fleet.location'].search([])
+        for location in list_location:
+            selection += [(location.code, location.name)]
+        return selection
 
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
     equipment_id = fields.Many2one('maintenance.equipment', string='Xe')
-    location_id = fields.Many2one('fleet.location', 'Tên điểm đầu', required=True)
-    location_dest_id = fields.Many2one('fleet.location', string='Tên điểm đích')
-    # location_name = fields.Char(string='Tên điểm đầu')
-    # location_dest_name = fields.Char(string='Tên điểm đích')
-    # location_id = fields.Selection(selection=_get_location_selection)
-    # location_dest_id = fields.Selection(selection=_get_location_selection)
+    location_name = fields.Char(string='Tên điểm đầu')
+    location_dest_name = fields.Char(string='Tên điểm đích')
+    location_id = fields.Selection(selection=_get_location_selection)
+    location_dest_id = fields.Selection(selection=_get_location_selection)
     eating_fee = fields.Monetary('Tiền ăn')
     law_money = fields.Monetary('Tiền luật')
     road_tiket_fee = fields.Monetary('Vé cầu đường')
@@ -73,9 +71,9 @@ class FleetTrip(models.Model):
     def onchange_location_id(self):
         location_obj = self.env['fleet.location']
         if self.location_id:
-            location_id = location_obj.search([("id", "=", self.location_id.id)], limit=1)
+            location_id = location_obj.search([("code", "=", self.location_id)], limit=1)
             if location_id:
-                # self.location_name = location_id.name
+                self.location_name = location_id.name
                 self.district_id = location_id.district_id.id
                 self.ward_id = location_id.ward_id.id
                 self.state_id = location_id.state_id.id
@@ -84,9 +82,9 @@ class FleetTrip(models.Model):
     def onchange_location_dest_id(self):
         location_obj = self.env['fleet.location']
         if self.location_dest_id:
-            location_dest_id = location_obj.search([("id", "=", self.location_dest_id.id)], limit=1)
+            location_dest_id = location_obj.search([("code", "=", self.location_dest_id)], limit=1)
             if location_dest_id:
-                # self.location_dest_name = location_dest_id.name
+                self.location_dest_name = location_dest_id.name
                 self.district_dest_id = location_dest_id.district_id.id
                 self.ward_dest_id = location_dest_id.ward_id.id
                 self.state_dest_id = location_dest_id.state_id.id
