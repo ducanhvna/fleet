@@ -66,6 +66,7 @@ class FleetTrip(models.Model):
 
     country_id = fields.Many2one('res.country', default=241, string='Quốc gia', ondelete='restrict')
     company_name = fields.Char(string='Công ty')
+    fleet_product_id = fields.Many2one('fleet.product', string='Mặt hàng', ondelete='restrict')
 
     @api.onchange("location_id")
     def onchange_location_id(self):
