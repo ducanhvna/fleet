@@ -9,8 +9,8 @@
                 <field name="schedule_date"/>
                 <field name="equipment_id"/>
                 <field name="fleet_product_id"/>
-                <field name="location_name" string="Tên điểm đi"/>
-                <field name="location_dest_name" string="Tên điểm đến"/>
+                <field name="location_id" string="Tên điểm đi"/>
+                <field name="location_dest_id" string="Tên điểm đến"/>
                 <field name="location_start_district_state" string="Địa chỉ điểm đi"/>
                 <field name="location_dest_district_state" string="Địa chỉ điểm đến"/>
                 <button name="do_approve"
@@ -68,10 +68,13 @@
                             <field name="location_id" string="Chọn điểm đầu"/>
                             <label for="ward_id" string="Nơi xuất phát"/>
                             <div class="o_address_format">
-                                <field name="state_id" class="o_address_state" placeholder="Tỉnh/TP"/>
-                                <field name="district_id" placeholder="Quận/Huyện" class="o_address_zip"/>
-                                <field name="ward_id" placeholder="Xã/Phường" class="o_address_city"/>
-                                <field name="address_start" placeholder="Địa chỉ"/>
+                                <field name="state_id" class="o_address_state" placeholder="Tỉnh/TP" readonly="True"
+                                       force_save="1"/>
+                                <field name="district_id" placeholder="Quận/Huyện" class="o_address_zip" readonly="True"
+                                       force_save="1"/>
+                                <field name="ward_id" placeholder="Xã/Phường" class="o_address_city" readonly="True"
+                                       force_save="1"/>
+                                <field name="address_start" placeholder="Địa chỉ" readonly="True" force_save="1"/>
                             </div>
                             <field name="odometer_start"/>
                             <field name="start_date"/>
@@ -82,10 +85,13 @@
                             <field name="location_dest_id" string="Chọn điểm cuối"/>
                             <label for="ward_dest_id" string="Nơi đến"/>
                             <div class="o_address_format">
-                                <field name="state_dest_id" class="o_address_state" placeholder="Tỉnh/TP"/>
-                                <field name="district_dest_id" placeholder="Quận/Huyện" class="o_address_zip"/>
-                                <field name="ward_dest_id" placeholder="Xã/Phường" class="o_address_city"/>
-                                <field name="address_end" placeholder="Địa chỉ"/>
+                                <field name="state_dest_id" class="o_address_state" placeholder="Tỉnh/TP"
+                                       readonly="True" force_save="1"/>
+                                <field name="district_dest_id" placeholder="Quận/Huyện" class="o_address_zip"
+                                       readonly="True" force_save="1"/>
+                                <field name="ward_dest_id" placeholder="Xã/Phường" class="o_address_city"
+                                       readonly="True" force_save="1"/>
+                                <field name="address_end" placeholder="Địa chỉ" readonly="True" force_save="1"/>
                             </div>
                             <field name="odometer_dest"/>
                             <field name="odometer_end"/>
