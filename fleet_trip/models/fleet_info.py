@@ -32,14 +32,17 @@ class FleetLocation(models.Model):
                                domain="[('country_id', '=', country_id)]")
     country_id = fields.Many2one('res.country', default=241, string='Quốc gia', ondelete='restrict')
     note = fields.Text(string="Ghi chú")
-    
-    # @api.model
-    # def create(self, vals_list):
-    #     num_location = len(self.env['fleet.location'].search([]))
-    #     if num_location > 3:
-    #         raise ValidationError('Chỉ có thể tạo tối đa 3 địa điểm!')
-    #     return super(FleetLocation, self).create(vals_list)
 
+    @api.model
+    def create(self, vals_list):
+        district_id = vals_list.get('district_id', False)
+        ward_id = vals_list.get('ward_id', False)
+        state_id = vals_list.get('state_id', False)
+        num_location = self.env['fleet.location'].search(
+            [('district_id', '=', district_id), ('ward_id', '=', ward_id), ('state_id', '=', state_id)])
+        if num_location:
+            raise ValidationError('Không thể tạo địa điểm trùng nhau!')
+        return super(FleetLocation, self).create(vals_list)
 
 
 # class FleetCar(models.Model):
