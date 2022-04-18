@@ -38,8 +38,12 @@ class FleetLocation(models.Model):
         district_id = vals_list.get('district_id', False)
         ward_id = vals_list.get('ward_id', False)
         state_id = vals_list.get('state_id', False)
+        note = vals_list.get('note', False)
         num_location = self.env['fleet.location'].search(
-            [('district_id', '=', district_id), ('ward_id', '=', ward_id), ('state_id', '=', state_id)])
+            [('district_id', '=', district_id),
+             ('ward_id', '=', ward_id),
+             ('state_id', '=', state_id),
+             ('note', '=', note)])
         if num_location:
             raise ValidationError('Không thể tạo địa điểm trùng nhau!')
         return super(FleetLocation, self).create(vals_list)
