@@ -1,7 +1,7 @@
 /*! Copyright (c) 2011 by Jonas Mosbech - https://github.com/jmosbech/StickyTableHeaders
 	MIT license info: https://github.com/jmosbech/StickyTableHeaders/blob/master/license.txt */
 
-;(function ($, window, undefined) {
+; (function ($, window, undefined) {
 	'use strict';
 
 	var name = 'stickyTableHeaders',
@@ -17,7 +17,7 @@
 			cacheHeaderHeight: false
 		};
 
-	function Plugin (el, options) {
+	function Plugin(el, options) {
 		// To avoid scope issues, use 'base' instead of 'this'
 		// to reference this class from internal events and functions.
 		var base = this;
@@ -58,7 +58,7 @@
 				$this.trigger('clonedHeader.' + name, [base.$clonedHeader]);
 
 				base.$clonedHeader.addClass('tableFloatingHeader');
-				base.$clonedHeader.css({display: 'none', opacity: 0.0});
+				base.$clonedHeader.css({ display: 'none', opacity: 0.0 });
 
 				base.$originalHeader.addClass('tableFloatingHeaderOriginal');
 				base.$originalHeader.after(base.$clonedHeader);
@@ -75,12 +75,12 @@
 			base.bind();
 		};
 
-		base.destroy = function (){
+		base.destroy = function () {
 			base.$el.unbind('destroyed', base.teardown);
 			base.teardown();
 		};
 
-		base.teardown = function(){
+		base.teardown = function () {
 			if (base.isSticky) {
 				base.$originalHeader.css('position', 'static');
 			}
@@ -96,7 +96,7 @@
 			base.$el = null;
 		};
 
-		base.bind = function(){
+		base.bind = function () {
 			base.$scrollableArea.on('scroll.' + name, base.toggleHeaders);
 			if (!base.isWindowScrolling) {
 				base.$window.on('scroll.' + name + base.id, base.setPositionValues);
@@ -106,7 +106,7 @@
 			base.$scrollableArea.on('resize.' + name, base.updateWidth);
 		};
 
-		base.unbind = function(){
+		base.unbind = function () {
 			// unbind window events by specifying handle so we don't remove too much
 			base.$scrollableArea.off('.' + name, base.toggleHeaders);
 			if (!base.isWindowScrolling) {
@@ -134,11 +134,11 @@
 					var $this = $(this),
 						newLeft,
 						newTopOffset = base.isWindowScrolling ? (
-									isNaN(base.options.fixedOffset) ?
-									base.options.fixedOffset.outerHeight() :
-									base.options.fixedOffset
-								) :
-								base.$scrollableArea.offset().top + (!isNaN(base.options.fixedOffset) ? base.options.fixedOffset : 0),
+							isNaN(base.options.fixedOffset) ?
+								base.options.fixedOffset.outerHeight() :
+								base.options.fixedOffset
+						) :
+							base.$scrollableArea.offset().top + (!isNaN(base.options.fixedOffset) ? base.options.fixedOffset : 0),
 						offset = $this.offset(),
 
 						scrollTop = base.$scrollableArea.scrollTop() + newTopOffset,
@@ -147,19 +147,19 @@
 						headerHeight = base.options.cacheHeaderHeight ? base.cachedHeaderHeight : base.$clonedHeader.height(),
 
 						scrolledPastTop = base.isWindowScrolling ?
-								scrollTop > offset.top :
-								newTopOffset > offset.top,
+							scrollTop > offset.top :
+							newTopOffset > offset.top,
 						notScrolledPastBottom = (base.isWindowScrolling ? scrollTop : 0) <
 							(offset.top + $this.height() - headerHeight - (base.isWindowScrolling ? 0 : newTopOffset));
-	           $(".o_optional_columns_dropdown_toggle").css("top", newTopOffset+"px");
+					$(".o_optional_columns_dropdown_toggle").css("top", newTopOffset + "px");
 
-	           $(".o_optional_columns").css("right", '12px');
-	           $(".o_optional_columns").css('position', 'fixed');
-	           $(".o_optional_columns").css('z-index', '100');
-	           $(".o_optional_columns").css('top', newTopOffset+"px");
+					$(".o_optional_columns").css("right", '12px');
+					$(".o_optional_columns").css('position', 'fixed');
+					$(".o_optional_columns").css('z-index', '100');
+					$(".o_optional_columns").css('top', newTopOffset + "px");
 
-	           $(".o_optional_columns_dropdown").css('max-height', ($(".o_list_view").height()-29)+"px");
-	           $(".o_optional_columns_dropdown").css('overflow', 'auto');
+					$(".o_optional_columns_dropdown").css('max-height', ($(".o_list_view").height() - 29) + "px");
+					$(".o_optional_columns_dropdown").css('overflow', 'auto');
 
 					if (scrolledPastTop && notScrolledPastBottom) {
 						newLeft = offset.left - scrollLeft + base.options.leftOffset;
@@ -187,13 +187,13 @@
 						$this.trigger('disabledStickiness.' + name);
 					}
 				});
-                // fix in case header is not scrolling if horizontally.
-                var offset = $('.table-responsive').offset();
-                var offset_left = offset && offset.left || 0;
-                $('.table-responsive').scroll(function(){
-                    let scroll = offset_left - $('.table-responsive').scrollLeft();
-                    $('.tableFloatingHeaderOriginal').css({ left: scroll });
-                });
+				// fix in case header is not scrolling if horizontally.
+				var offset = $('.table-responsive').offset();
+				var offset_left = offset && offset.left || 0;
+				$('.table-responsive').scroll(function () {
+					let scroll = offset_left - $('.table-responsive').scrollLeft();
+					$('.tableFloatingHeaderOriginal').css({ left: scroll });
+				});
 			}
 		}, 0);
 
@@ -201,8 +201,8 @@
 			var winScrollTop = base.$window.scrollTop(),
 				winScrollLeft = base.$window.scrollLeft();
 			if (!base.isSticky ||
-					winScrollTop < 0 || winScrollTop + base.$window.height() > base.$document.height() ||
-					winScrollLeft < 0 || winScrollLeft + base.$window.width() > base.$document.width()) {
+				winScrollTop < 0 || winScrollTop + base.$window.height() > base.$document.height() ||
+				winScrollLeft < 0 || winScrollLeft + base.$window.width() > base.$document.width()) {
 				return;
 			}
 			base.$originalHeader.css({
@@ -241,7 +241,7 @@
 
 				if ($this.css('box-sizing') === 'border-box') {
 					var boundingClientRect = $this[0].getBoundingClientRect();
-					if(boundingClientRect.width) {
+					if (boundingClientRect.width) {
 						width = boundingClientRect.width; // #39: border-box bug
 					} else {
 						width = boundingClientRect.right - boundingClientRect.left; // ie8 bug: getBoundingClientRect() does not have a width property
@@ -313,7 +313,7 @@
 
 	// A plugin wrapper around the constructor,
 	// preventing against multiple instantiations
-	$.fn[name] = function ( options ) {
+	$.fn[name] = function (options) {
 		return this.each(function () {
 			var instance = $.data(this, 'plugin_' + name);
 			if (instance) {
@@ -322,8 +322,8 @@
 				} else {
 					instance.updateOptions(options);
 				}
-			} else if(options !== 'destroy') {
-				$.data(this, 'plugin_' + name, new Plugin( this, options ));
+			} else if (options !== 'destroy') {
+				$.data(this, 'plugin_' + name, new Plugin(this, options));
 			}
 		});
 	};

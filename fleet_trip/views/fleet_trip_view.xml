@@ -54,7 +54,7 @@
                             <field name="location_name"/>
                             <field name="location_id" widget="radio" string="Chọn điểm đầu"/>
                             <label for="ward_id" string="Nơi xuất phát"/>
-                            <div class="o_address_format">
+                            <div attrs="{'invisible': [('location_name','=','')]}" class="o_address_format">
                                 <field name="state_id" class="o_address_state" placeholder="Tỉnh/TP"/>
                                 <field name="district_id" placeholder="Quận/Huyện" class="o_address_zip"/>
                                 <field name="ward_id" placeholder="Xã/Phường" class="o_address_city"/>
@@ -69,7 +69,7 @@
                             <field name="location_dest_name"/>
                             <field name="location_dest_id" widget="radio" string="Chọn điểm cuối"/>
                             <label for="ward_dest_id" string="Nơi đến"/>
-                            <div class="o_address_format">
+                            <div attrs="{'invisible': [('location_dest_name','=','')]}" class="o_address_format">
                                 <field name="state_dest_id" class="o_address_state" placeholder="Tỉnh/TP"/>
                                 <field name="district_dest_id" placeholder="Quận/Huyện" class="o_address_zip"/>
                                 <field name="ward_dest_id" placeholder="Xã/Phường" class="o_address_city"/>
