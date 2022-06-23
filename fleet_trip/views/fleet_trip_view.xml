@@ -54,7 +54,7 @@
                             <field name="schedule_date" />
                             <field name="location_id" string="Chọn điểm đầu" />
                             <label for="ward_id" string="Nơi xuất phát" />
-                            <div class="o_address_format" attrs="{'invisible': [('location_id','=',[(FALSE, False, [])])]}">
+                            <div class="o_address_format" attrs="{'invisible': [('location_name','=',[(FALSE, False, [])])]}">
                                 <field name="state_id" class="o_address_state" placeholder="Tỉnh/TP" readonly="True" force_save="1" />
                                 <field name="district_id" placeholder="Quận/Huyện" class="o_address_zip" readonly="True" force_save="1" />
                                 <field name="ward_id" placeholder="Xã/Phường" class="o_address_city" readonly="True" force_save="1" />
@@ -68,7 +68,7 @@
                             <field name="fleet_product_id" />
                             <field name="location_dest_id" string="Chọn điểm cuối" />
                             <label for="ward_dest_id" string="Nơi đến" />
-                            <div class="o_address_format" attrs="{'invisible': [('location_dest_id','=',[(FALSE, False, [])])]}">
+                            <div class="o_address_format" attrs="{'invisible': [('location_dest_name','=',[(FALSE, False, [])])]}">
                                 <field name="state_dest_id" class="o_address_state" placeholder="Tỉnh/TP" readonly="True" force_save="1" />
                                 <field name="district_dest_id" placeholder="Quận/Huyện" class="o_address_zip" readonly="True" force_save="1" />
                                 <field name="ward_dest_id" placeholder="Xã/Phường" class="o_address_city" readonly="True" force_save="1" />
