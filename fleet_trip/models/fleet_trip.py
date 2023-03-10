@@ -170,7 +170,7 @@ class FleetTrip(models.Model):
             })
 
     def do_odometer_end(self, odometer_end, attachments=[]):
-        self.odometer_end = odometer_end
+        self.odometer_dest = odometer_end
         if not attachments:
             return True
         for attachment in attachments:
