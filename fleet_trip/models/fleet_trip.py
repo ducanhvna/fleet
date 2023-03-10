@@ -181,6 +181,19 @@ class FleetTrip(models.Model):
                 'res_model': 'fleet.trip',
                 'res_id': self.id,
             })
+    
+    def do_odometer_dest(self, odometer_dest, attachments=[]):
+        self.odometer_dest = odometer_dest
+        if not attachments:
+            return True
+        for attachment in attachments:
+            self.env['ir.attachment'].create({
+                'name': self.equipment_id.name,
+                'type': 'url',
+                'url': attachment,
+                'res_model': 'fleet.trip',
+                'res_id': self.id,
+            })
 
     @api.depends('odometer_start', 'odometer_dest')
     def _compute_odometer_end(self):
