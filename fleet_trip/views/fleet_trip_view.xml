@@ -50,7 +50,7 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="equipment_id" options="{'no_create': 1, 'no_edit': 1}" />
+                            <field name="equipment_id"  string="Phương tiện"  options="{'no_create': 1, 'no_edit': 1}" />
                             <field name="schedule_date" />
                             <field name="location_id" string="Chọn điểm đầu" />
                             <label for="ward_id" string="Nơi xuất phát" />
