@@ -7,7 +7,7 @@
             <field name="code">1</field>
         </record>
 
-        <record id="fleet_location_02" model="fleet.location">
+        <!-- <record id="fleet_location_02" model="fleet.location">
             <field name="name">Nhà máy 2</field>
             <field name="code">2</field>
         </record>
@@ -15,7 +15,7 @@
         <record id="fleet_location_03" model="fleet.location">
             <field name="name">Nhà máy 3</field>
             <field name="code">3</field>
-        </record>
+        </record> -->
 
     </data>
 </odoo>
