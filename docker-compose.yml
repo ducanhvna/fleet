@@ -10,6 +10,7 @@ services:
     restart: always             # run as a service
     volumes:
         - ./postgresql:/var/lib/postgresql/data
+        - ./backups:/backups
 
   odoo14:
     image: odoo:14
@@ -17,7 +18,7 @@ services:
     depends_on:
       - db
     ports:
-      - "10014:8069"
+      - "8069:8069"
       - "20014:8072" # live chat
     tty: true
     command: --
