@@ -52,20 +52,20 @@
                         <group>
                             <field name="equipment_id"  string="Phương tiện"  options="{'no_create': 1, 'no_edit': 1}" />
                             <field name="schedule_date" />
+                            <field name="fleet_product_id" />
+                        </group>
+
+                        <group>
                             <field name="location_id" string="Chọn điểm đầu" />
                             <label for="ward_id" string="Nơi xuất phát" />
-                            <field name="fleet_product_id" />
+                            
                             <div class="o_address_format" attrs="{'invisible': [('location_id','!=',False)]}">
                                 <field name="state_id" class="o_address_state" placeholder="Tỉnh/TP" readonly="True" force_save="1" />
                                 <field name="district_id" placeholder="Quận/Huyện" class="o_address_zip" readonly="True" force_save="1" />
                                 <field name="ward_id" placeholder="Xã/Phường" class="o_address_city" readonly="True" force_save="1" />
                                 <field name="address_start" placeholder="Địa chỉ" readonly="True" force_save="1" />
                             </div>
-                            <field name="odometer_start" />
-                            <field name="start_date" />
-                        </group>
-                        <group>
-                            <field name="employee_id" />
+
                             <field name="location_dest_id" string="Chọn điểm cuối" />
                             <label for="ward_dest_id" string="Nơi đến" />
                             <div class="o_address_format" attrs="{'invisible': [('location_dest_id','!=',False)]}">
@@ -74,9 +74,22 @@
                                 <field name="ward_dest_id" placeholder="Xã/Phường" class="o_address_city" readonly="True" force_save="1" />
                                 <field name="address_end" placeholder="Địa chỉ" readonly="True" force_save="1" />
                             </div>
+                        </group>
+                        <group>
+                            <field name="odometer_start" />
+                            <field name="start_date" />
+                        </group>
+                        <group>
                             <field name="odometer_dest" />
                             <field name="odometer_end" />
                             <field name="end_date" />
+                            
+                        </group>
+                        <group>
+                            <field name="employee_id" />
+                            
+                            
+                            
                             <field name="company_name" />
                         </group>
                     </group>

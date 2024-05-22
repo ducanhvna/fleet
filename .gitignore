@@ -3,3 +3,4 @@ postgresql/
 etc/addons/
 etc/sessions/
 etc/filestore/
+__pycache__/
