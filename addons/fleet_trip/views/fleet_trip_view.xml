@@ -5,6 +5,7 @@
         <field name="model">fleet.trip</field>
         <field name="arch" type="xml">
             <tree>
+                <field name="create_uid" />
                 <field name="employee_id" />
                 <field name="schedule_date" />
                 <field name="equipment_id" />
